@@ -32,6 +32,11 @@ execute:
 ```{r}
 rm(list = ls())
 library(tidyverse)
+library(readr)
+library(glue)
+library(ggplot2)
+library(stringr)
+library(waffle)
 ```
 
 ------------------------------------------------------------------------

@@ -1,6 +1,7 @@
 ---
 title: "Entrega grupal"
-author: "Adolfo Alarcón (DNI:49904123-B), Rosalía (DNI: 00000000-X), ..."
+author: "Adolfo Alarcón (DNI:49904123-B), Gonzalo Blanca (DNI: 71821091-A), Pablo Galarón (DNI: 51199771-T), Mario Gómez (DNI: 77487217-X), 
+Itziar Carro (DNI: 12429492-Q), Hugo Alonso (DNI: 53764714-Y), Raul Palomo (DNI: )"
 format:
   revealjs:
     theme: [style.scss]

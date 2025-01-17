@@ -290,14 +290,11 @@ surveys_tidy <-
 
 ```
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
+\<\<\<\<\<\<\< HEAD \<\<\<\<\<\<\< HEAD =======
 
->>>>>>> e615bb591161fd37fd17c6992cfafff9c462397a
-=======
->>>>>>> eea9b772c1d5f09a9ff9871b025cbace0f927363
-pregunta 12.1 ¿Cuál el partido ganador en los municipios de más de 100 000 habitantes de censo en cada una de las elecciones?
+# \>\>\>\>\>\>\> e615bb591161fd37fd17c6992cfafff9c462397a
+
+> > > > > > > eea9b772c1d5f09a9ff9871b025cbace0f927363 pregunta 12.1 ¿Cuál el partido ganador en los municipios de más de 100 000 habitantes de censo en cada una de las elecciones?
 
 ```{r}
 ganadores_municipios <- 
@@ -308,8 +305,9 @@ election_data_tidy |>
   select(c(fecha, cod_mun, municipio, siglas))
 ```
 
-<<<<<<< HEAD
-```{}
+\<\<\<\<\<\<\< HEAD
+
+```         
 ```
 
 ```{r}
@@ -390,10 +388,11 @@ ggplot(ganadores_municipios, aes(x = as.factor(fecha), y = prop, fill = siglas))
     axis.title = element_text(size = 12)
   )
 ```
->>>>>>> e615bb591161fd37fd17c6992cfafff9c462397a
 
-<<<<<<< HEAD
-#Ahora vamos a clasificar los municipios en urbano o rural
+> > > > > > > e615bb591161fd37fd17c6992cfafff9c462397a
+
+\<\<\<\<\<\<\< HEAD #Ahora vamos a clasificar los municipios en urbano o rural
+
 ```{r}
 
 #Ahora vamos a clasificar los municipios en urbano o rural
@@ -422,10 +421,6 @@ votos_por_zona <- datos |>
 
 
 ```
-
-
-
-
 
 ```{r}
 
@@ -467,5 +462,21 @@ los votos de ese partido tienden a aumentar significativamente, y por lo tanto l
 de correlación más altos se benefician más de una alta participación"
 
 
->>>>>>> eea9b772c1d5f09a9ff9871b025cbace0f927363
+```
+
+```{r}
+library(ggplot2)
+library(viridis)
+
+ggplot(election_data_tidy, aes(x = participacion_total, y = votos, color = siglas)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  scale_color_viridis_d()+
+  scale_color_manual(values=c("PSOE"="red","PP"="blue","VOX"="green","UP"="purple","PNV"="#117a65","OTROS"="grey","MP"="#abebc6","ERC"="yellow","EH-BILDU"="#76EEC6"
+                              ,"CS"="#FF8C00","CIU"="#00688B","BNG"="#B0E2FF"))
+  theme_minimal() +
+  labs(title = "Relación entre Participación y Votos por Partido",
+       x = "Participación",
+       y = "Votos",
+       color = "Partido")
 ```

@@ -218,7 +218,6 @@ library(glue)
 
 ```{r}
 rm(list = ls())
-library(tidyverse)
 ```
 
 ```{r}
@@ -248,24 +247,37 @@ election_data_tidy <-
                values_to = "votos",
                values_drop_na = TRUE) |> 
   select(-c(tipo_eleccion, vuelta, codigo_distrito_electoral)) |> 
-   mutate(siglas = case_when(str_detect(Partido, "PARTIDO SOCIALISTA OBRERO|PARTIT DELS SOCIALISTES DE CATALUNYA|PARTIDO DOS SOCIALISTAS DE GALICIA|PSOE") ~ "PSOE",
-                     str_detect(Partido, "PARTIDO POPULAR|PP") ~ "PP",
-                     str_detect(Partido, "CIUDADANOS|CIUTADANS|CS") ~ "CS",
-                     str_detect(Partido, "PARTIDO NACIONALISTA VASCO|EUZKO ALDERDI JELTZALEA|EAJ-PNV|PNV") ~ "PNV",
-                     str_detect(Partido, "BLOQUE NACIONALISTA GALEGO|BNG") ~ "BNG",
-                     str_detect(Partido, "CONVERGENCIA I UNIO|CIU|CONVERGENCIA i UNIO") ~ "CIU",
-                     str_detect(Partido, "PODEMOS|PODEM|IU|LOS VERDES|PODEM|EZKER BATUA|UP") ~ "UP",
-                     str_detect(Partido, "VOX") ~ "VOX",
-                     str_detect(Partido,"SORTU|EUSKO ALKARTASUNA|ARALAR| ALTERNATIBA|EH-BILDU")~ "EH-BILDU",
-                     str_detect(Partido, "ESQUERRA|ERC") ~ "ERC",
-                     str_detect(Partido, "MAS PAIS|MP") ~ "MP",
-                     TRUE ~ "OTROS"))|> 
-  mutate(fecha = ymd(glue("{anno}{mes}01")),
+  mutate(fecha = ymd(glue("{anno}{mes}01")), 
          cod_mun= glue("{codigo_ccaa}-{codigo_provincia}-{codigo_municipio}"))
 
 election_data_tidy <- 
-  election_data_tidy |> left_join(cod_mun, by="cod_mun")
+  election_data_tidy |> 
+  left_join(abbrev, by = c("Partido" = "denominacion"))
 
+election_data_tidy <- 
+  election_data_tidy |> 
+  mutate(siglas = str_replace_all(siglas, pattern = "[\\.:\\+\\']", replacement = ""))
+
+
+election_data_tidy <- 
+  election_data_tidy |> 
+  mutate(siglas = case_when(
+    str_detect(siglas, "PSOE|SOCIALISTA") ~ "PSOE",
+    str_detect(siglas, "PP|POPULAR") ~ "PP",
+    str_detect(siglas, "CS|CIUDADANOS|Cs") ~ "CS",
+    str_detect(siglas, "PNV|NACIONALISTA VASCO") ~ "PNV",
+    str_detect(siglas, "BNG|BLOQUE NACIONALISTA") ~ "BNG",
+    str_detect(siglas, "PODEMOS|IU|EZKER BATUA|UNIDAS") ~ "PODEMOS",
+    str_detect(siglas, "ERC|ESQUERRA") ~ "ERC",
+    str_detect(siglas, "BILDU|SORTU|EUSKO ALKARTASUNA|ARALAR|ALTERNATIBA") ~ "BILDU",
+    str_detect(siglas, "MÄS PAÍS|M PAÍS") ~ "MP",
+    str_detect(siglas, "VOX") ~ "VOX",
+    str_detect(siglas, "CIU|CONVERGENCIA|UNIÓ") ~ "CIU",
+    TRUE ~ "OTROS"))
+
+  
+election_data_tidy <- 
+  election_data_tidy |> left_join(cod_mun, by="cod_mun")
 
 surveys_tidy <- 
   surveys |> 
@@ -293,16 +305,32 @@ surveys_tidy |>
   distinct(siglas)
   
 ```
+
+
 pregunta 12.1 ¿Cuál el partido ganador en los municipios de más de 100 000 habitantes de censo en cada una de las elecciones?
 ```{r}
+ganadores_municipios <- 
 election_data_tidy |> 
   filter(censo > 100000) |>
   group_by(fecha, cod_mun) |> 
   slice_max(votos, n=1) |>
   select(c(fecha, cod_mun, municipio, siglas))
-
-
 ```
 
-
+```{r}
+# Crear el gráfico de barras apiladas
+ggplot(ganadores_municipios, aes(x = as.factor(fecha), y = prop, fill = siglas)) +
+  geom_bar(stat = "identity", position = "stack") +
+  labs(
+    title = "Proporción de Municipios Ganados por Partido (Censo > 100,000 habitantes)",
+    x = "Año de Elección",
+    y = "Proporción de Municipios",
+    fill = "Partido"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(size = 14, face = "bold"),
+    axis.title = element_text(size = 12)
+  )
+```
 

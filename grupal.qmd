@@ -207,29 +207,34 @@ Recuerda que el objetivo real es demostrar un dominio de las herramientas vistas
 
 Deberéis tenerlo todo subido a Github con el enlace generado de manera correcta.
 
-## trabajo
 
 ```{r}
+## EMPEZAMOS AHORA
+
+{r}
+rm(list = ls())
+
+
+{r}
 library(tidyverse)
 library(lubridate)
 library(forcats)
 library(glue)
-```
+library(mapSpain)
+library(waffle)
 
-```{r}
-rm(list = ls())
-```
 
-```{r}
+{r}
 # NO TOQUES NADA
-
 election_data <- read_csv(file = "./data/datos_elecciones_brutos.csv")
 cod_mun <- read_csv(file = "./data/cod_mun.csv")
 surveys <- read_csv(file = "./data/historical_surveys.csv")
 abbrev <- read_csv(file = "./data/siglas.csv")
-```
 
-```{r}
+
+## Filtramos datos de 2008 a 2019
+
+{r}
 # Filtrar elecciones entre 2008 y 2019
 election_data <- 
   election_data |> 
@@ -237,10 +242,12 @@ election_data <-
 
 election_data |> 
   distinct(anno)
-```
 
-```{r}
-# Pasar a tidy data todos
+
+
+## Tidy data Election_Data
+
+{r}
 election_data_tidy <-
   election_data |> 
   pivot_longer(cols =  "BERDEAK-LOS VERDES":"COALICIÓN POR MELILLA", 
@@ -276,8 +283,12 @@ election_data_tidy <-
                      TRUE ~ "OTROS"))
 
 election_data_tidy <- 
-  election_data_tidy |> left_join(cod_mun, by="cod_mun")
+  election_data_tidy |> left_join(cod_mun, by = "cod_mun")
 
+
+## Tidy data surveys
+
+{r}
 surveys_tidy <- 
   surveys |> 
   pivot_longer(cols= -("type_survey":"turnout"),
@@ -288,184 +299,95 @@ surveys_tidy <-
   drop_na(size) |> 
   filter(exit_poll == FALSE & size >= 500 & year(date_elec) >= 2008 & as.Date(field_date_to) - as.Date(field_date_from) > 1)
 
-```
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
+## EJERCICIOS OBLIGATORIOS
 
->>>>>>> e615bb591161fd37fd17c6992cfafff9c462397a
-=======
->>>>>>> eea9b772c1d5f09a9ff9871b025cbace0f927363
-pregunta 12.1 ¿Cuál el partido ganador en los municipios de más de 100 000 habitantes de censo en cada una de las elecciones?
+### ej 1 
 
-```{r}
+> ¿Qué partido fue el ganador en los municipios con más de 100.000 habitantes (censo) en cada una de las elecciones?
+
+{r}
 ganadores_municipios <- 
 election_data_tidy |> 
   filter(censo > 100000) |>
   group_by(fecha, cod_mun) |> 
-  slice_max(votos, n=1) |>
-  select(c(fecha, cod_mun, municipio, siglas))
-```
-
-<<<<<<< HEAD
-```{}
-```
-
-```{r}
-# Seleccionar las columnas necesarias
-datos <- election_data_tidy |> 
-  select(anno, mes, cod_mun, siglas, votos, censo, participacion_1, participacion_2)
-
-# Agrupar por partido político y sumar los votos totales
-votos_totales_por_partido <- datos |> 
-  group_by(siglas) |> 
-  summarise(
-    votos_totales = sum(votos, na.rm = TRUE),  # Sumar votos totales por partido
-    censo_total = sum(censo, na.rm = TRUE)    # Sumar el censo asociado
-  ) |> 
-  ungroup()
-
-votos_totales_por_partido <- votos_totales_por_partido |> 
-  mutate(
-    relacion_votos_censo = votos_totales / censo_total  # Proporción votos/censo
-  )
-
-votos_totales_por_partido
+  slice_max(votos, n=1, with_ties =  FALSE) |>
+  select(c(fecha, cod_mun, municipio, siglas, votos))
 
 
-#Ahora vamos a clasificar los municipios en urbano o rural
-
-
-datos <- datos |> mutate("tipo" = case_when(
-  censo < 10000 ~ "rural",
-  TRUE ~"urbano"
-))
-
-#Ahora analizamos la relacion
-
-# Calcular votos totales y proporción por tipo de zona
-votos_por_zona <- datos |> 
-  group_by(siglas, tipo) |> 
-  summarise(
-    votos_totales = sum(votos, na.rm = TRUE),
-    censo_total = sum(censo, na.rm = TRUE),
-    relacion_votos_censo = votos_totales / censo_total
-  ) |> 
-  ungroup()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# Crear el gráfico de barras apiladas
-ggplot(ganadores_municipios, aes(x = as.factor(fecha), y = prop, fill = siglas)) +
-  geom_bar(stat = "identity", position = "stack") +
+{r}
+ggplot(ganadores_municipios, aes(x = fecha, fill = siglas)) +
+  geom_bar(position = "stack") +
   labs(
-    title = "Proporción de Municipios Ganados por Partido (Censo > 100,000 habitantes)",
-    x = "Año de Elección",
-    y = "Proporción de Municipios",
+    title = "Partidos ganadores en municipios (>100k habitantes) por fecha",
+    x = "Fecha de Elección",
+    y = "Número de Municipios Ganados",
     fill = "Partido"
   ) +
   theme_minimal() +
-  theme(
-    plot.title = element_text(size = 14, face = "bold"),
-    axis.title = element_text(size = 12)
-  )
-```
->>>>>>> e615bb591161fd37fd17c6992cfafff9c462397a
-
-<<<<<<< HEAD
-#Ahora vamos a clasificar los municipios en urbano o rural
-```{r}
-
-#Ahora vamos a clasificar los municipios en urbano o rural
-
-
-datos <- datos |> mutate("tipo" = case_when(
-  censo < 10000 ~ "rural",
-  TRUE ~"urbano"
-))
-
-# Calcular votos totales y proporción por tipo de zona
-votos_por_zona <- datos |> 
-  group_by(siglas, tipo) |> 
-  summarise(
-    votos_totales = sum(votos, na.rm = TRUE),
-    censo_total = sum(censo, na.rm = TRUE),
-    relacion_votos_censo = votos_totales / censo_total
-  ) |> 
-  ungroup()
-
-
-```
-
-```{r}
-
-
-
-```
-
-
-
-
-
-```{r}
-
-
-tema_morado_para_geom_bar<-
-  theme(legend.position = 'bottom',
-        plot.title = element_text(face= 'bold', size= 40, hjust = 0.5, margin = margin(t = 5, b= 20), color = '#FEFAE0'),
-        plot.subtitle = element_text(face = 'italic',size = 15, hjust = 0.5, margin = margin(b = 10), color = '#FEFAE0'),
-        plot.background = element_rect(fill = '#533749'),
-        panel.background = element_rect(fill = '#FEFAE0'),
-        panel.grid.major = element_line(color = '#B9B59D'),
-        panel.grid.minor = element_blank(),
-        plot.margin = margin(t = 20, b = 10, l = 15, r= 15),
-        axis.text = element_text(face = 'bold', size = 15, color = '#FEFAE0'),  # Tamaño del texto de los ejes
-        axis.title = element_text(face = 'italic', size = 16, color = '#FEFAE0'),  # Tamaño del texto de los títulos de ejes
-        legend.text = element_text(size = 15, color = '#FEFAE0'),  # Tamaño del texto de la leyenda
-        legend.title = element_text(face = 'italic', size = 16, color = '#FEFAE0'))
-
-
-
-
-election_data_tidy<-election_data_tidy |> mutate("participacion_total"=participacion_1+participacion_2)
-
-correlacion<- election_data_tidy |> 
-  group_by(siglas) |> summarise(correlacion = cor(participacion_total, votos, use = "complete.obs"))
-
-ggplot(correlacion, aes(x =siglas, y = correlacion)) +
-  geom_bar(stat = "identity", fill = '#533749') +
-  theme_minimal() +tema_morado_para_geom_bar+
-  labs(title = "Correlación entre Participación Total y Votos por Partido",
-       x = "Partido",
-       y = "Correlación") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 
+## ej 2
 
-"Podemos interpretar la correlaciones más cercanas a 1 como que a medida que aumenta la participación, 
-los votos de ese partido tienden a aumentar significativamente, y por lo tanto los partidos con valores 
-de correlación más altos se benefician más de una alta participación"
+>¿Qué partido fue el segundo cuando el primero fue el PSOE? ¿Y cuando el primero fue el PP?
+
+{r}
+Ejercicio12_1<-
+election_data_tidy |>
+  group_by(fecha, cod_mun) |> 
+  slice_max(votos, n=2) |>
+  filter(siglas[1]=="PSOE") |>
+  select(c(fecha, cod_mun, municipio, siglas, votos)) |> #El select ayuda a previsualizar durante la creación                                                           del código no es necesario.
+  filter(siglas!="PSOE") |>
+  ungroup() |>
+  group_by(siglas) |>
+  count() |>
+  ungroup()
+
+Ejercicio12_2 <-
+election_data_tidy |>
+  group_by(fecha, cod_mun) |> 
+  slice_max(votos, n=2) |>
+  filter(siglas[1]=="PP") |>
+  select(c(fecha, cod_mun, municipio, siglas, votos)) |> #El select ayuda a previsualizar durante la creación del código no es necesario.
+  filter(siglas!="PP") |>
+  ungroup() |>
+  group_by(siglas) |>
+  count() |>
+  ungroup()
 
 
->>>>>>> eea9b772c1d5f09a9ff9871b025cbace0f927363
+
+{r}
+pal1 <- c("#fefe66", "#f8624a", "#9d57f0", "#4aacf8", "#4af87c", "#9d57f0", "#fefe66", "#f84aae")
+
+library(waffle)
+
+ggplot(Ejercicio12_1) +
+  geom_waffle(aes(fill = siglas, values = n), make_proportional = TRUE)+
+    scale_fill_manual(values = pal1)+
+  labs(
+    title = "Proporción de partidos en segundo lugar cuando ganó el PSOE") +
+  theme_minimal() + theme(legend.position = "bottom", legend.direction = "horizontal")
+
+
+
+pal2 <- c("#fefe66","#9d57f0","#f8624a","#4af87c")
+
+
+ggplot(Ejercicio12_2) +
+  geom_waffle(aes(fill = siglas, values = n), make_proportional = TRUE)+
+    scale_fill_manual(values = pal2)+
+  labs(
+    title = "Proporción de partidos en segundo lugar cuando ganó el PP") +
+  theme_minimal() +
+  theme_minimal() + theme(legend.position = "bottom", legend.direction = "horizontal")
+
 ```
+
+
+`
+
+
+

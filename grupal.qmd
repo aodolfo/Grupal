@@ -222,6 +222,7 @@ rm(list = ls())
 
 ```{r}
 # NO TOQUES NADA
+
 election_data <- read_csv(file = "./data/datos_elecciones_brutos.csv")
 cod_mun <- read_csv(file = "./data/cod_mun.csv")
 surveys <- read_csv(file = "./data/historical_surveys.csv")
@@ -289,8 +290,15 @@ surveys_tidy <-
 
 ```
 
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
 
+>>>>>>> e615bb591161fd37fd17c6992cfafff9c462397a
+=======
+>>>>>>> eea9b772c1d5f09a9ff9871b025cbace0f927363
 pregunta 12.1 ¿Cuál el partido ganador en los municipios de más de 100 000 habitantes de censo en cada una de las elecciones?
+
 ```{r}
 ganadores_municipios <- 
 election_data_tidy |> 
@@ -300,7 +308,73 @@ election_data_tidy |>
   select(c(fecha, cod_mun, municipio, siglas))
 ```
 
+<<<<<<< HEAD
+```{}
+```
+
 ```{r}
+# Seleccionar las columnas necesarias
+datos <- election_data_tidy |> 
+  select(anno, mes, cod_mun, siglas, votos, censo, participacion_1, participacion_2)
+
+# Agrupar por partido político y sumar los votos totales
+votos_totales_por_partido <- datos |> 
+  group_by(siglas) |> 
+  summarise(
+    votos_totales = sum(votos, na.rm = TRUE),  # Sumar votos totales por partido
+    censo_total = sum(censo, na.rm = TRUE)    # Sumar el censo asociado
+  ) |> 
+  ungroup()
+
+votos_totales_por_partido <- votos_totales_por_partido |> 
+  mutate(
+    relacion_votos_censo = votos_totales / censo_total  # Proporción votos/censo
+  )
+
+votos_totales_por_partido
+
+
+#Ahora vamos a clasificar los municipios en urbano o rural
+
+
+datos <- datos |> mutate("tipo" = case_when(
+  censo < 10000 ~ "rural",
+  TRUE ~"urbano"
+))
+
+#Ahora analizamos la relacion
+
+# Calcular votos totales y proporción por tipo de zona
+votos_por_zona <- datos |> 
+  group_by(siglas, tipo) |> 
+  summarise(
+    votos_totales = sum(votos, na.rm = TRUE),
+    censo_total = sum(censo, na.rm = TRUE),
+    relacion_votos_censo = votos_totales / censo_total
+  ) |> 
+  ungroup()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # Crear el gráfico de barras apiladas
 ggplot(ganadores_municipios, aes(x = as.factor(fecha), y = prop, fill = siglas)) +
   geom_bar(stat = "identity", position = "stack") +
@@ -316,4 +390,82 @@ ggplot(ganadores_municipios, aes(x = as.factor(fecha), y = prop, fill = siglas))
     axis.title = element_text(size = 12)
   )
 ```
+>>>>>>> e615bb591161fd37fd17c6992cfafff9c462397a
 
+<<<<<<< HEAD
+#Ahora vamos a clasificar los municipios en urbano o rural
+```{r}
+
+#Ahora vamos a clasificar los municipios en urbano o rural
+
+
+datos <- datos |> mutate("tipo" = case_when(
+  censo < 10000 ~ "rural",
+  TRUE ~"urbano"
+))
+
+# Calcular votos totales y proporción por tipo de zona
+votos_por_zona <- datos |> 
+  group_by(siglas, tipo) |> 
+  summarise(
+    votos_totales = sum(votos, na.rm = TRUE),
+    censo_total = sum(censo, na.rm = TRUE),
+    relacion_votos_censo = votos_totales / censo_total
+  ) |> 
+  ungroup()
+
+
+```
+
+```{r}
+
+
+
+```
+
+
+
+
+
+```{r}
+
+
+tema_morado_para_geom_bar<-
+  theme(legend.position = 'bottom',
+        plot.title = element_text(face= 'bold', size= 40, hjust = 0.5, margin = margin(t = 5, b= 20), color = '#FEFAE0'),
+        plot.subtitle = element_text(face = 'italic',size = 15, hjust = 0.5, margin = margin(b = 10), color = '#FEFAE0'),
+        plot.background = element_rect(fill = '#533749'),
+        panel.background = element_rect(fill = '#FEFAE0'),
+        panel.grid.major = element_line(color = '#B9B59D'),
+        panel.grid.minor = element_blank(),
+        plot.margin = margin(t = 20, b = 10, l = 15, r= 15),
+        axis.text = element_text(face = 'bold', size = 15, color = '#FEFAE0'),  # Tamaño del texto de los ejes
+        axis.title = element_text(face = 'italic', size = 16, color = '#FEFAE0'),  # Tamaño del texto de los títulos de ejes
+        legend.text = element_text(size = 15, color = '#FEFAE0'),  # Tamaño del texto de la leyenda
+        legend.title = element_text(face = 'italic', size = 16, color = '#FEFAE0'))
+
+
+
+
+election_data_tidy<-election_data_tidy |> mutate("participacion_total"=participacion_1+participacion_2)
+
+correlacion<- election_data_tidy |> 
+  group_by(siglas) |> summarise(correlacion = cor(participacion_total, votos, use = "complete.obs"))
+
+ggplot(correlacion, aes(x =siglas, y = correlacion)) +
+  geom_bar(stat = "identity", fill = '#533749') +
+  theme_minimal() +tema_morado_para_geom_bar+
+  labs(title = "Correlación entre Participación Total y Votos por Partido",
+       x = "Partido",
+       y = "Correlación") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+
+
+"Podemos interpretar la correlaciones más cercanas a 1 como que a medida que aumenta la participación, 
+los votos de ese partido tienden a aumentar significativamente, y por lo tanto los partidos con valores 
+de correlación más altos se benefician más de una alta participación"
+
+
+>>>>>>> eea9b772c1d5f09a9ff9871b025cbace0f927363
+```

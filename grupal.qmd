@@ -351,6 +351,46 @@ votos_totales_por_partido <- votos_totales_por_partido |>
 votos_totales_por_partido
 
 
+#Ahora vamos a clasificar los municipios en urbano o rural
+
+
+datos <- datos |> mutate("tipo" = case_when(
+  censo < 10000 ~ "rural",
+  TRUE ~"urbano"
+))
+
+#Ahora analizamos la relacion
+
+# Calcular votos totales y proporción por tipo de zona
+votos_por_zona <- datos |> 
+  group_by(siglas, tipo) |> 
+  summarise(
+    votos_totales = sum(votos, na.rm = TRUE),
+    censo_total = sum(censo, na.rm = TRUE),
+    relacion_votos_censo = votos_totales / censo_total
+  ) |> 
+  ungroup()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # Crear el gráfico de barras apiladas
 ggplot(ganadores_municipios, aes(x = as.factor(fecha), y = prop, fill = siglas)) +
@@ -381,8 +421,6 @@ datos <- datos |> mutate("tipo" = case_when(
   TRUE ~"urbano"
 ))
 
-#Ahora analizamos la relacion
-
 # Calcular votos totales y proporción por tipo de zona
 votos_por_zona <- datos |> 
   group_by(siglas, tipo) |> 
@@ -396,20 +434,19 @@ votos_por_zona <- datos |>
 
 ```
 
+```{r}
+
+
+
+```
+
+
 
 
 
 ```{r}
 
-datos <- datos |> 
-  mutate(
-    zona = case_when(
-      censo < 10000 ~ "rural",    # Municipios con censo < 10,000 se clasifican 
-      censo >= 10000 ~ "urbano"  # Municipios con censo >= 10,000 se clasifican 
-    )
-  )
-=======
-```{r}
+
 tema_morado_para_geom_bar<-
   theme(legend.position = 'bottom',
         plot.title = element_text(face= 'bold', size= 40, hjust = 0.5, margin = margin(t = 5, b= 20), color = '#FEFAE0'),

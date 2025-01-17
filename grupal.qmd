@@ -379,8 +379,61 @@ ggplot(Ejercicio12_2) +
   theme_minimal() + theme(legend.position = "bottom", legend.direction = "horizontal")
 
 ```
+#ejer3:¿A quién beneficia la baja participación?
+#ADOLFO
+
+```{r}
+tema_morado_para_geom_bar<-
+  theme(legend.position = 'bottom',
+        plot.title = element_text(face= 'bold', size= 40, hjust = 0.5, margin = margin(t = 5, b= 20), color = '#FEFAE0'),
+        plot.subtitle = element_text(face = 'italic',size = 15, hjust = 0.5, margin = margin(b = 10), color = '#FEFAE0'),
+        plot.background = element_rect(fill = '#533749'),
+        panel.background = element_rect(fill = '#FEFAE0'),
+        panel.grid.major = element_line(color = '#B9B59D'),
+        panel.grid.minor = element_blank(),
+        plot.margin = margin(t = 20, b = 10, l = 15, r= 15),
+        axis.text = element_text(face = 'bold', size = 15, color = '#FEFAE0'),  # Tamaño del texto de los ejes
+        axis.title = element_text(face = 'italic', size = 16, color = '#FEFAE0'),  # Tamaño del texto de los títulos de ejes
+        legend.text = element_text(size = 15, color = '#FEFAE0'),  # Tamaño del texto de la leyenda
+        legend.title = element_text(face = 'italic', size = 16, color = '#FEFAE0'))
+
+
+
+
+election_data_tidy<-election_data_tidy |> mutate("participacion_total"=participacion_1+participacion_2)
+
+correlacion<- election_data_tidy |> 
+  group_by(siglas) |> summarise(correlacion = cor(participacion_total, votos, use = "complete.obs"))
+
+
+ggplot(correlacion, aes(x =siglas, y = correlacion)) +
+  geom_bar(stat = "identity", fill = '#533749') +
+  theme_minimal() +tema_morado_para_geom_bar+
+  labs(title = "Correlación entre Participación Total y Votos por Partido",
+       x = "Partido",
+       y = "Correlación") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+install.packages("viridis")
+library(ggplot2)
+library(viridis)
+
+ggplot(election_data_tidy, aes(x = participacion_total, y = votos, color = siglas)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  scale_color_viridis_d()+
+  scale_color_manual(values=c("PSOE"="red","PP"="blue","VOX"="green","UP"="purple","PNV"="#117a65","OTROS"="grey","MP"="#abebc6","ERC"="yellow","EH-BILDU"="#76EEC6"
+                              ,"CS"="#FF8C00","CIU"="#00688B","BNG"="#B0E2FF"))
+  theme_minimal() +
+  labs(title = "Relación entre Participación y Votos por Partido",
+       x = "Participación",
+       y = "Votos",
+       color = "Partido") 
+```
+
 
 #ejer4:¿Cómo analizar la relación entre censo y voto? ¿Es cierto que determinados partidos ganan en las zonas rurales?
+
+#HUGO
 
 
 ```{r}
@@ -412,7 +465,7 @@ datos <- datos |> mutate("tipo" = case_when(
   censo < 10000 ~ "rural",
   TRUE ~"urbano"
 ))
-¡
+
 # Calcular votos totales y proporción por tipo de zona
 votos_por_zona <- datos |> 
   group_by(siglas, tipo) |> 
@@ -439,4 +492,5 @@ votos_por_zona <- datos |>
   ) |> 
   ungroup()
 ```
-
+#ejer5:¿Cómo calibrar el error de las encuestas (recordemos que las encuestas son de intención de voto a nivel nacional)?
+##RAUL

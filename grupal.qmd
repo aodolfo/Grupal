@@ -258,24 +258,22 @@ election_data_tidy <-
   election_data_tidy |> 
   mutate(siglas = str_replace_all(siglas, pattern = "[\\.:\\+\\']", replacement = ""))
 
-
 election_data_tidy <- 
-  election_data_tidy |> 
-  mutate(siglas = case_when(
-    str_detect(siglas, "PSOE|SOCIALISTA") ~ "PSOE",
-    str_detect(siglas, "PP|POPULAR") ~ "PP",
-    str_detect(siglas, "CS|CIUDADANOS|Cs") ~ "CS",
-    str_detect(siglas, "PNV|NACIONALISTA VASCO") ~ "PNV",
-    str_detect(siglas, "BNG|BLOQUE NACIONALISTA") ~ "BNG",
-    str_detect(siglas, "PODEMOS|IU|EZKER BATUA|UNIDAS") ~ "PODEMOS",
-    str_detect(siglas, "ERC|ESQUERRA") ~ "ERC",
-    str_detect(siglas, "BILDU|SORTU|EUSKO ALKARTASUNA|ARALAR|ALTERNATIBA") ~ "BILDU",
-    str_detect(siglas, "MÄS PAÍS|M PAÍS") ~ "MP",
-    str_detect(siglas, "VOX") ~ "VOX",
-    str_detect(siglas, "CIU|CONVERGENCIA|UNIÓ") ~ "CIU",
-    TRUE ~ "OTROS"))
+  election_data_tidy |>
+  mutate("siglas" =
+           case_when(str_detect(siglas, "PSOE") ~ "PSOE",
+                     str_detect(siglas, "PP") ~ "PP",
+                     str_detect(siglas, "CS|C´S") ~ "CS",
+                     str_detect(siglas, "PNV") ~ "PNV",
+                     str_detect(siglas, "BNG") ~ "BNG",
+                     str_detect(siglas, "PODEMOS|EB-B|IU") ~ "PODEMOS",
+                     str_detect(siglas, "ERC|ESQUERRA") ~ "ERC",
+                     str_detect(siglas, "BILDU|EA|ARALAR") ~ "BILDU",
+                     str_detect(siglas, "MÁS PAÍS") ~ "MP",
+                     str_detect(siglas, "VOX") ~ "VOX",
+                     str_detect(siglas, "CIU") ~ "CIU",
+                     TRUE ~ "OTROS"))
 
-  
 election_data_tidy <- 
   election_data_tidy |> left_join(cod_mun, by="cod_mun")
 
@@ -285,25 +283,10 @@ surveys_tidy <-
                names_to= "Partido",
                values_to="Estimación",
                values_drop_na = TRUE) |> 
-  mutate(siglas = case_when(str_detect(Partido, "PARTIDO SOCIALISTA OBRERO|PARTIT DELS SOCIALISTES DE CATALUNYA|PARTIDO DOS SOCIALISTAS DE GALICIA|PSOE") ~ "PSOE",
-                     str_detect(Partido, "PARTIDO POPULAR|PP") ~ "PP",
-                     str_detect(Partido, "CIUDADANOS|CIUTADANS|CS") ~ "CS",
-                     str_detect(Partido, "PARTIDO NACIONALISTA VASCO|EUZKO ALDERDI JELTZALEA|EAJ-PNV|PNV") ~ "PNV",
-                     str_detect(Partido, "BLOQUE NACIONALISTA GALEGO|BNG") ~ "BNG",
-                     str_detect(Partido, "CONVERGENCIA I UNIO|CIU|CONVERGENCIA i UNIO") ~ "CIU",
-                     str_detect(Partido, "PODEMOS|PODEM|IU|LOS VERDES|PODEM|EZKER BATUA|UP") ~ "UP",
-                     str_detect(Partido, "VOX") ~ "VOX",
-                     str_detect(Partido,"SORTU|EUSKO ALKARTASUNA|ARALAR| ALTERNATIBA|EH-BILDU")~ "EH-BILDU",
-                     str_detect(Partido, "ESQUERRA|ERC") ~ "ERC",
-                     str_detect(Partido, "MAS PAIS|MP") ~ "MP",
-                     TRUE ~ "OTROS")) |> 
   select(-type_survey) |> 
   drop_na(size) |> 
   filter(exit_poll == FALSE & size >= 500 & year(date_elec) >= 2008 & as.Date(field_date_to) - as.Date(field_date_from) > 1)
 
-surveys_tidy |> 
-  distinct(siglas)
-  
 ```
 
 

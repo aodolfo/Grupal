@@ -214,6 +214,7 @@ library(tidyverse)
 library(lubridate)
 library(forcats)
 library(glue)
+library(ggplot2)
 ```
 
 ```{r}
@@ -373,20 +374,6 @@ votos_por_zona <- datos |>
 
 
 
-# Crear el gráfico de barras apiladas
-ggplot(ganadores_municipios, aes(x = as.factor(fecha), y = prop, fill = siglas)) +
-  geom_bar(stat = "identity", position = "stack") +
-  labs(
-    title = "Proporción de Municipios Ganados por Partido (Censo > 100,000 habitantes)",
-    x = "Año de Elección",
-    y = "Proporción de Municipios",
-    fill = "Partido"
-  ) +
-  theme_minimal() +
-  theme(
-    plot.title = element_text(size = 14, face = "bold"),
-    axis.title = element_text(size = 12)
-  )
 ```
 
 > > > > > > > e615bb591161fd37fd17c6992cfafff9c462397a
@@ -447,6 +434,7 @@ election_data_tidy<-election_data_tidy |> mutate("participacion_total"=participa
 correlacion<- election_data_tidy |> 
   group_by(siglas) |> summarise(correlacion = cor(participacion_total, votos, use = "complete.obs"))
 
+
 ggplot(correlacion, aes(x =siglas, y = correlacion)) +
   geom_bar(stat = "identity", fill = '#533749') +
   theme_minimal() +tema_morado_para_geom_bar+
@@ -454,12 +442,6 @@ ggplot(correlacion, aes(x =siglas, y = correlacion)) +
        x = "Partido",
        y = "Correlación") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
-
-
-
-"Podemos interpretar la correlaciones más cercanas a 1 como que a medida que aumenta la participación, 
-los votos de ese partido tienden a aumentar significativamente, y por lo tanto los partidos con valores 
-de correlación más altos se benefician más de una alta participación"
 
 
 ```
@@ -478,5 +460,6 @@ ggplot(election_data_tidy, aes(x = participacion_total, y = votos, color = sigla
   labs(title = "Relación entre Participación y Votos por Partido",
        x = "Participación",
        y = "Votos",
-       color = "Partido")
+       color = "Partido") 
 ```
+

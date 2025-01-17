@@ -223,6 +223,7 @@ library(tidyverse)
 
 ```{r}
 # NO TOQUES NADA
+
 election_data <- read_csv(file = "./data/datos_elecciones_brutos.csv")
 cod_mun <- read_csv(file = "./data/cod_mun.csv")
 surveys <- read_csv(file = "./data/historical_surveys.csv")
@@ -293,7 +294,9 @@ surveys_tidy |>
   distinct(siglas)
   
 ```
+
 pregunta 12.1 ¿Cuál el partido ganador en los municipios de más de 100 000 habitantes de censo en cada una de las elecciones?
+
 ```{r}
 election_data_tidy |> 
   filter(censo > 100000) |>
@@ -304,5 +307,64 @@ election_data_tidy |>
 
 ```
 
+```{}
+```
+
+```{r}
+# Seleccionar las columnas necesarias
+datos <- election_data_tidy |> 
+  select(anno, mes, cod_mun, siglas, votos, censo, participacion_1, participacion_2)
+
+# Agrupar por partido político y sumar los votos totales
+votos_totales_por_partido <- datos |> 
+  group_by(siglas) |> 
+  summarise(
+    votos_totales = sum(votos, na.rm = TRUE),  # Sumar votos totales por partido
+    censo_total = sum(censo, na.rm = TRUE)    # Sumar el censo asociado
+  ) |> 
+  ungroup()
+
+votos_totales_por_partido <- votos_totales_por_partido |> 
+  mutate(
+    relacion_votos_censo = votos_totales / censo_total  # Proporción votos/censo
+  )
+
+votos_totales_por_partido
 
 
+#Ahora vamos a clasificar los municipios en urbano o rural
+
+
+datos <- datos |> mutate("tipo" = case_when(
+  censo < 10000 ~ "rural",
+  TRUE ~"urbano"
+))
+
+#Ahora analizamos la relacion
+
+# Calcular votos totales y proporción por tipo de zona
+votos_por_zona <- datos |> 
+  group_by(siglas, tipo) |> 
+  summarise(
+    votos_totales = sum(votos, na.rm = TRUE),
+    censo_total = sum(censo, na.rm = TRUE),
+    relacion_votos_censo = votos_totales / censo_total
+  ) |> 
+  ungroup()
+
+
+
+
+
+```
+
+```{r}
+
+datos <- datos |> 
+  mutate(
+    zona = case_when(
+      censo < 10000 ~ "rural",    # Municipios con censo < 10,000 se clasifican 
+      censo >= 10000 ~ "urbano"  # Municipios con censo >= 10,000 se clasifican 
+    )
+  )
+```

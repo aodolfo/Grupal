@@ -207,47 +207,49 @@ Recuerda que el objetivo real es demostrar un dominio de las herramientas vistas
 
 Deberéis tenerlo todo subido a Github con el enlace generado de manera correcta.
 
-
-```{r}
 ## EMPEZAMOS AHORA
 
-{r}
+
+```{r}
 rm(list = ls())
+```
 
 
-{r}
+```{r}
 library(tidyverse)
 library(lubridate)
 library(forcats)
 library(glue)
 library(mapSpain)
 library(waffle)
+```
 
 
-{r}
+```{r}
 # NO TOQUES NADA
 election_data <- read_csv(file = "./data/datos_elecciones_brutos.csv")
 cod_mun <- read_csv(file = "./data/cod_mun.csv")
 surveys <- read_csv(file = "./data/historical_surveys.csv")
 abbrev <- read_csv(file = "./data/siglas.csv")
+```
 
 
+```{r}
 ## Filtramos datos de 2008 a 2019
 
-{r}
-# Filtrar elecciones entre 2008 y 2019
 election_data <- 
   election_data |> 
   filter(between(anno, 2008, 2019))
 
 election_data |> 
   distinct(anno)
+```
 
+## AHORA HAGO TIDY DATA
 
-
+```{r}
 ## Tidy data Election_Data
 
-{r}
 election_data_tidy <-
   election_data |> 
   pivot_longer(cols =  "BERDEAK-LOS VERDES":"COALICIÓN POR MELILLA", 
@@ -288,7 +290,6 @@ election_data_tidy <-
 
 ## Tidy data surveys
 
-{r}
 surveys_tidy <- 
   surveys |> 
   pivot_longer(cols= -("type_survey":"turnout"),
@@ -298,15 +299,13 @@ surveys_tidy <-
   select(-type_survey) |> 
   drop_na(size) |> 
   filter(exit_poll == FALSE & size >= 500 & year(date_elec) >= 2008 & as.Date(field_date_to) - as.Date(field_date_from) > 1)
-
+```
 
 ## EJERCICIOS OBLIGATORIOS
+## ej 1: ¿Qué partido fue el ganador en los municipios con más de 100.000 habitantes (censo) en cada una de las elecciones?
 
-### ej 1 
 
-> ¿Qué partido fue el ganador en los municipios con más de 100.000 habitantes (censo) en cada una de las elecciones?
-
-{r}
+```{r}
 ganadores_municipios <- 
 election_data_tidy |> 
   filter(censo > 100000) |>
@@ -314,8 +313,6 @@ election_data_tidy |>
   slice_max(votos, n=1, with_ties =  FALSE) |>
   select(c(fecha, cod_mun, municipio, siglas, votos))
 
-
-{r}
 ggplot(ganadores_municipios, aes(x = fecha, fill = siglas)) +
   geom_bar(position = "stack") +
   labs(
@@ -326,13 +323,13 @@ ggplot(ganadores_municipios, aes(x = fecha, fill = siglas)) +
   ) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
 
 
-## ej 2
+## ej 2.¿Qué partido fue el segundo cuando el primero fue el PSOE? ¿Y cuando el primero fue el PP?
 
->¿Qué partido fue el segundo cuando el primero fue el PSOE? ¿Y cuando el primero fue el PP?
+```{r}
 
-{r}
 Ejercicio12_1<-
 election_data_tidy |>
   group_by(fecha, cod_mun) |> 
@@ -357,9 +354,6 @@ election_data_tidy |>
   count() |>
   ungroup()
 
-
-
-{r}
 pal1 <- c("#fefe66", "#f8624a", "#9d57f0", "#4aacf8", "#4af87c", "#9d57f0", "#fefe66", "#f84aae")
 
 library(waffle)
@@ -386,8 +380,63 @@ ggplot(Ejercicio12_2) +
 
 ```
 
+#ejer4:¿Cómo analizar la relación entre censo y voto? ¿Es cierto que determinados partidos ganan en las zonas rurales?
 
-`
+
+```{r}
+# Seleccionar las columnas necesarias
+datos <- election_data_tidy |> 
+  select(anno, mes, cod_mun, siglas, votos, censo, participacion_1, participacion_2)
+
+# Agrupar por partido político y sumar los votos totales
+votos_totales_por_partido <- datos |> 
+  group_by(siglas) |> 
+  summarise(
+    votos_totales = sum(votos, na.rm = TRUE),  # Sumar votos totales por partido
+    censo_total = sum(censo, na.rm = TRUE)    # Sumar el censo asociado
+  ) |> 
+  ungroup()
+
+votos_totales_por_partido <- votos_totales_por_partido |> 
+  mutate(
+    relacion_votos_censo = votos_totales / censo_total  # Proporción votos/censo
+  )
+
+votos_totales_por_partido
 
 
+#Ahora vamos a clasificar los municipios en urbano o rural
+
+
+datos <- datos |> mutate("tipo" = case_when(
+  censo < 10000 ~ "rural",
+  TRUE ~"urbano"
+))
+¡
+# Calcular votos totales y proporción por tipo de zona
+votos_por_zona <- datos |> 
+  group_by(siglas, tipo) |> 
+  summarise(
+    votos_totales = sum(votos, na.rm = TRUE),
+    censo_total = sum(censo, na.rm = TRUE),
+    relacion_votos_censo = votos_totales / censo_total
+  ) |> 
+  ungroup()
+#Ahora vamos a clasificar los municipios en urbano o rural
+
+datos <- datos |> mutate("tipo" = case_when(
+  censo < 10000 ~ "rural",
+  TRUE ~"urbano"
+))
+
+# Calcular votos totales y proporción por tipo de zona
+votos_por_zona <- datos |> 
+  group_by(siglas, tipo) |> 
+  summarise(
+    votos_totales = sum(votos, na.rm = TRUE),
+    censo_total = sum(censo, na.rm = TRUE),
+    relacion_votos_censo = votos_totales / censo_total
+  ) |> 
+  ungroup()
+```
 

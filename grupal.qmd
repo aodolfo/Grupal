@@ -637,3 +637,45 @@ ggplot(mapa_provi) +
     plot.background = element_rect(fill = "antiquewhite"))
 ```
 
+#Qué medios de comunicación estimaron que las elecciones del 2008 las ganaba el PP vs qué medios de comunicación estimarón que ganaba el PSOE.
+
+```{r}
+# Filtrar los datos para el año 2008 y los partidos PP y PSOE
+medios <- surveys_tidy |> 
+  filter(year(date_elec) == 2008 & Partido %in% c("PP", "PSOE")) |> 
+  select(c(date_elec, media, Partido, Estimación))
+
+# Dividir los datos entre PP y PSOE
+pp_data <- medios |> filter(Partido == "PP")
+psoe_data <- medios |> filter(Partido == "PSOE")
+
+# Unir los datos por 'media' y 'date_elec' para poder comparar las estimaciones
+comparacion <- pp_data |> 
+  inner_join(psoe_data, by = c("media", "date_elec"), 
+             suffix = c("_PP", "_PSOE"))
+
+# Filtrar los medios donde PP tiene mayor estimación que PSOE
+resultado_pp <-
+  comparacion |> 
+  filter(Estimación_PP > Estimación_PSOE)
+
+# Filtrar los medios donde PSOE tiene mayor estimación que PP
+resultado_psoe <- 
+  comparacion |> 
+  filter(Estimación_PP < Estimación_PSOE)
+
+# Seleccionar los medios únicos que favorecen a PP
+media_con_mas_pp <- 
+  resultado_pp |> 
+  select(media) |> distinct()
+
+# Seleccionar los medios únicos que favorecen a PSOE
+media_con_mas_psoe <- 
+  resultado_psoe |> 
+  select(media) |> distinct()
+
+# Mostrar los resultados
+media_con_mas_pp
+media_con_mas_psoe
+
+```

@@ -492,5 +492,45 @@ votos_por_zona <- datos |>
   ) |> 
   ungroup()
 ```
+
 #ejer5:¿Cómo calibrar el error de las encuestas (recordemos que las encuestas son de intención de voto a nivel nacional)?
 ##RAUL
+
+```{r}
+#agregamos el total de votos para cada elección.
+total_votos <- 
+  election_data_tidy |> 
+  filter(siglas != "OTROS") |> 
+  summarise("votos_elección" = sum(votos), .by = fecha)
+
+#agregamos el total de votos que recibió cada partido en las distintas elecciones.
+votos_partidos <-
+  election_data_tidy |> 
+  filter(siglas != "OTROS") |> 
+  summarise("votos_totales_partido" = sum(votos), .by = c(fecha, siglas))
+
+#calculamos el porcentaje de voto que tuvo cada partido para cada elección.
+porcentaje_votos_partido <-
+  votos_partidos |>  left_join(total_votos, by = "fecha") 
+porcentaje_votos_partido <- 
+  porcentaje_votos_partido |>  
+  mutate("porcentaje_voto" = votos_totales_partido / votos_elección * 100,
+         "elec_year" = year(fecha))
+```
+
+```{r}
+#calculamos el error absoluto entre el porcentaje de voto que recibió cada partido y las estimaciones.
+error <- 
+  surveys_tidy |> mutate("elec_year" = year(date_elec)) |>
+  inner_join(porcentaje_votos_partido, by = c("elec_year" = "elec_year",
+                                            "Partido" = "siglas"))  |> 
+  mutate("error_abs" = abs(Estimación - porcentaje_voto))
+```
+
+```{r}
+#calculamos el error medio de cada encuesta para cada elección.
+errores_encuestas <- 
+  error |> 
+  summarise("empresa" = unique(pollster),
+            "error" = mean(error_abs), .by = c(date_elec, id_pollster))
+```

@@ -534,3 +534,17 @@ errores_encuestas <-
   summarise("empresa" = unique(pollster),
             "error" = mean(error_abs), .by = c(date_elec, id_pollster))
 ```
+
+#ejer6:¿Qué casas encuestadoras acertaron más y cuáles se desviaron más de los resultados?
+
+```{r}
+#vemos cuales fueron las 5 empresas que acertarón más
+errores_encuestas |>  
+  slice_min(error, n = 5) 
+
+
+#vemos cuales fueron las 5 empresas que se desviarón más de los resultados
+errores_encuestas |> 
+  slice_max(error, n = 5)
+```
+

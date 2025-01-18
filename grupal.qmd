@@ -417,6 +417,11 @@ install.packages("viridis")
 library(ggplot2)
 library(viridis)
 
+#cuanta mas correlación haya, mejor le viene q haya muchos votos
+#al aumentar la participación, también aumentan los votos para ese partido.
+#los partidos con correlaciones bajas son aquellos que podrían beneficiarse más de una baja participación 
+
+
 ggplot(election_data_tidy, aes(x = participacion_total, y = votos, color = siglas)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE) +
@@ -546,5 +551,89 @@ errores_encuestas |>
 #vemos cuales fueron las 5 empresas que se desviarón más de los resultados
 errores_encuestas |> 
   slice_max(error, n = 5)
+```
+## mapa ganador por municipio en las elecciones de 2019
+
+```{r}
+datos_mapa <- 
+  election_data_tidy |> 
+  filter(anno == 2019) |> 
+  mutate(fecha = ymd(glue("{anno}{mes}01")), 
+         cod_mun= glue("{codigo_provincia}{codigo_municipio}")) |> 
+  filter(siglas != "OTROS") |> 
+  summarise("votos_por_mun" = sum(votos), .by = c(siglas, cod_mun)) |> 
+  slice_max(votos_por_mun, n = 1, by = cod_mun) 
+
+mapa_muni <- 
+  esp_get_munic() |> 
+  left_join(datos_mapa, by = c("LAU_CODE" = "cod_mun"))
+
+
+ggplot(mapa_muni) + 
+  geom_sf(aes(fill = siglas), color = NA) + 
+  scale_fill_manual(
+    values = c(
+      'PSOE' = '#e30613',  
+      'PP' = '#1e4b8f',    
+      'VOX' = '#008000',   
+      'PODEMOS' = '#5f457c',  
+      'ERC' = '#ffcc00',  
+      'PNV' = '#2E8B57',   
+      'BNG' = '#4682B4',   
+      'OTROS' = '#808080'  
+    )
+  ) + 
+  labs(
+    title = "Partido Ganador por Municipio en las Elecciones de 2019",
+    fill = "Partido"
+  ) +
+  theme_minimal() + theme(axis.title = element_text(family = "serif"),
+    axis.text = element_text(family = "mono"),
+    axis.text.x = element_text(family = "NimbusRom"),
+    axis.text.y = element_text(family = "Palatino"),
+    plot.title = element_text(family = "serif",
+        size = 20, face = "bold"), legend.text = element_text(family = "serif"),
+    legend.title = element_text(family = "serif"),
+    panel.background = element_rect(fill = "aliceblue"),
+    plot.background = element_rect(fill = "antiquewhite")) + theme(legend.title = element_text(size = 16))
+```
+## mapa ganador por provincia en las elecciones de 2019
+
+```{r}
+## mapa provincia
+
+datos_mapa_prov <- 
+  election_data_tidy |> 
+  filter(anno == 2019) |> 
+  group_by(codigo_provincia, siglas) |> 
+  summarise(votos_totales = sum(votos, na.rm = TRUE)) |> 
+  filter(siglas != "OTROS") |> 
+  slice_max(votos_totales, n = 1)
+  
+mapa_provi <- 
+  esp_get_prov() |> 
+  left_join(datos_mapa_prov, by = c("cpro" = "codigo_provincia"))
+
+partido_colores <- c(
+  'PSOE' = '#e30613',
+  'PP' = '#1e4b8f',
+  'VOX' = '#008000',
+  'PODEMOS' = '#5f457c',
+  'ERC' = '#ffcc00',
+  'PNV' = '#2E8B57',
+  'BNG' = '#4682B4',
+  'OTROS' = '#808080'
+)
+
+ggplot(mapa_provi) +
+  geom_sf(aes(fill = siglas), color = "white") + 
+  scale_fill_manual(values = partido_colores) +
+  labs(title = "Partido Ganador por Provincia en España (2019)",
+       fill = "Partido") +
+  theme_minimal() + theme(plot.title = element_text(family = "serif",
+    size = 22, face = "bold"), legend.text = element_text(family = "serif"),
+    legend.title = element_text(size = 16,
+        family = "serif"), panel.background = element_rect(fill = "aliceblue"),
+    plot.background = element_rect(fill = "antiquewhite"))
 ```
 

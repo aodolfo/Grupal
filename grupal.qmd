@@ -413,7 +413,6 @@ ggplot(correlacion, aes(x =siglas, y = correlacion)) +
        x = "Partido",
        y = "Correlación") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
-install.packages("viridis")
 library(ggplot2)
 library(viridis)
 

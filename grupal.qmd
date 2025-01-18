@@ -679,3 +679,207 @@ media_con_mas_pp
 media_con_mas_psoe
 
 ```
+
+
+```{r}
+# Filtrar los datos para el año 2011 y los partidos PP y PSOE
+medios_2011 <- surveys_tidy |> 
+  filter(year(date_elec) == 2011 & Partido %in% c("PP", "PSOE")) |> 
+  select(c(date_elec, media, Partido, Estimación))
+
+# Dividir los datos entre PP y PSOE
+pp_data_2011 <- medios_2011 |> filter(Partido == "PP")
+psoe_data_2011 <- medios_2011 |> filter(Partido == "PSOE")
+
+# Unir los datos por 'media' y 'date_elec' para poder comparar las estimaciones
+comparacion_2011 <- pp_data_2011 |> 
+  inner_join(psoe_data_2011, by = c("media", "date_elec"), 
+             suffix = c("_PP", "_PSOE"))
+
+# Filtrar los medios donde PP tiene mayor estimación que PSOE
+resultado_pp_2011 <-
+  comparacion_2011 |> 
+  filter(Estimación_PP > Estimación_PSOE)
+
+# Filtrar los medios donde PSOE tiene mayor estimación que PP
+resultado_psoe_2011 <- 
+  comparacion_2011 |> 
+  filter(Estimación_PP < Estimación_PSOE)
+
+# Seleccionar los medios únicos que favorecen a PP
+media_con_mas_pp_2011 <- 
+  resultado_pp_2011 |> 
+  select(media) |> distinct()
+
+# Seleccionar los medios únicos que favorecen a PSOE
+media_con_mas_psoe_2011 <- 
+  resultado_psoe_2011 |> 
+  select(media) |> distinct()
+
+# Mostrar los resultados
+media_con_mas_pp_2011
+media_con_mas_psoe_2011
+
+
+```
+
+```{r}
+# Filtrar los datos para el año 2015 y los partidos PP y PSOE
+medios_2015 <- surveys_tidy |> 
+  filter(year(date_elec) == 2015 & Partido %in% c("PP", "PSOE")) |> 
+  select(c(date_elec, media, Partido, Estimación))
+
+# Dividir los datos entre PP y PSOE
+pp_data_2015 <- medios_2015 |> filter(Partido == "PP")
+psoe_data_2015 <- medios_2015 |> filter(Partido == "PSOE")
+
+# Unir los datos por 'media' y 'date_elec' para poder comparar las estimaciones
+comparacion_2015 <- pp_data_2015 |> 
+  inner_join(psoe_data_2015, by = c("media", "date_elec"), 
+             suffix = c("_PP", "_PSOE"))
+
+# Filtrar los medios donde PP tiene mayor estimación que PSOE
+resultado_pp_2015 <-
+  comparacion_2015 |> 
+  filter(Estimación_PP > Estimación_PSOE)
+
+# Filtrar los medios donde PSOE tiene mayor estimación que PP
+resultado_psoe_2015 <- 
+  comparacion_2015 |> 
+  filter(Estimación_PP < Estimación_PSOE)
+
+# Seleccionar los medios únicos que favorecen a PP
+media_con_mas_pp_2015 <- 
+  resultado_pp_2015 |> 
+  select(media) |> distinct()
+
+# Seleccionar los medios únicos que favorecen a PSOE
+media_con_mas_psoe_2015 <- 
+  resultado_psoe_2015 |> 
+  select(media) |> distinct()
+
+# Mostrar los resultados
+media_con_mas_pp_2015
+media_con_mas_psoe_2015
+
+```
+
+
+```{r}
+# Filtrar los datos para el año 2016 y los partidos PP y PSOE
+medios_2016 <- surveys_tidy |> 
+  filter(year(date_elec) == 2016 & Partido %in% c("PP", "PSOE")) |> 
+  select(c(date_elec, media, Partido, Estimación))
+
+# Dividir los datos entre PP y PSOE
+pp_data_2016 <- medios_2016 |> filter(Partido == "PP")
+psoe_data_2016 <- medios_2016 |> filter(Partido == "PSOE")
+
+# Unir los datos por 'media' y 'date_elec' para poder comparar las estimaciones
+comparacion_2016 <- pp_data_2016 |> 
+  inner_join(psoe_data_2016, by = c("media", "date_elec"), 
+             suffix = c("_PP", "_PSOE"))
+
+# Filtrar los medios donde PP tiene mayor estimación que PSOE
+resultado_pp_2016 <-
+  comparacion_2016 |> 
+  filter(Estimación_PP > Estimación_PSOE)
+
+# Filtrar los medios donde PSOE tiene mayor estimación que PP
+resultado_psoe_2016 <- 
+  comparacion_2016 |> 
+  filter(Estimación_PP < Estimación_PSOE)
+
+# Seleccionar los medios únicos que favorecen a PP
+media_con_mas_pp_2016 <- 
+  resultado_pp_2016 |> 
+  select(media) |> distinct()
+
+# Seleccionar los medios únicos que favorecen a PSOE
+media_con_mas_psoe_2016 <- 
+  resultado_psoe_2016 |> 
+  select(media) |> distinct()
+
+# Mostrar los resultados
+media_con_mas_pp_2016 
+media_con_mas_psoe_2016 #No hubo ninguno que dijese que el psoe ganaba
+
+```
+
+```{r}
+# Filtrar los datos para el año 2019 y los partidos PP y PSOE
+medios_2019 <- surveys_tidy |> 
+  filter(year(date_elec) == 2019 & Partido %in% c("PP", "PSOE")) |> 
+  select(c(date_elec, media, Partido, Estimación))
+
+# Dividir los datos entre PP y PSOE
+pp_data_2019 <- medios_2019 |> filter(Partido == "PP")
+psoe_data_2019 <- medios_2019 |> filter(Partido == "PSOE")
+
+# Unir los datos por 'media' y 'date_elec' para poder comparar las estimaciones
+comparacion_2019 <- pp_data_2019 |> 
+  inner_join(psoe_data_2019, by = c("media", "date_elec"), 
+             suffix = c("_PP", "_PSOE"))
+
+# Filtrar los medios donde PP tiene mayor estimación que PSOE
+resultado_pp_2019 <-
+  comparacion_2019 |> 
+  filter(Estimación_PP > Estimación_PSOE)
+
+# Filtrar los medios donde PSOE tiene mayor estimación que PP
+resultado_psoe_2019 <- 
+  comparacion_2019 |> 
+  filter(Estimación_PP < Estimación_PSOE)
+
+# Seleccionar los medios únicos que favorecen a PP
+media_con_mas_pp_2019 <- 
+  resultado_pp_2019 |> 
+  select(media) |> distinct()
+
+# Seleccionar los medios únicos que favorecen a PSOE
+media_con_mas_psoe_2019 <- 
+  resultado_psoe_2019 |> 
+  select(media) |> distinct()
+
+# Mostrar los resultados
+media_con_mas_pp_2019
+media_con_mas_psoe_2019
+
+```
+```{r}
+library(ggplot2)
+
+# Combinar los resultados de todos los años en un solo dataframe
+medios_favoritos <- bind_rows(
+  media_con_mas_pp |> mutate(Partido = "PP"),
+  media_con_mas_psoe |> mutate(Partido = "PSOE"),
+  media_con_mas_pp_2011 |> mutate(Partido = "PP"),
+  media_con_mas_psoe_2011 |> mutate(Partido = "PSOE"),
+  media_con_mas_pp_2015 |> mutate(Partido = "PP"),
+  media_con_mas_psoe_2015 |> mutate(Partido = "PSOE"),
+  media_con_mas_pp_2016 |> mutate(Partido = "PP"),
+  media_con_mas_psoe_2016 |> mutate(Partido = "PSOE"),
+  media_con_mas_pp_2019 |> mutate(Partido = "PP"),
+  media_con_mas_psoe_2019 |> mutate(Partido = "PSOE")
+)
+
+# Resumir el conteo de veces que cada partido fue favorecido
+resumen_favoritos <- medios_favoritos |> 
+  group_by(Partido) |> 
+  summarise(Conteo = n()) |> 
+  arrange(desc(Conteo))
+
+# Crear el gráfico de barras
+ggplot(resumen_favoritos, aes(x = Partido, y = Conteo, fill = Partido)) +
+  geom_bar(stat = "identity", width = 0.6) +
+  labs(
+    title = "Preferencia de los Medios por Partido (2008-2019)",
+    x = "Partido Político",
+    y = "Número de veces favorecido",
+    fill = "Partido"
+  ) +
+  theme_minimal() +
+  scale_fill_manual(values = c("PP" = "blue", "PSOE" = "red"))
+
+```
+

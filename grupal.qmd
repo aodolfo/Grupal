@@ -1,7 +1,7 @@
 ---
-title: "Entrega grupal"
-author: "Adolfo Alarcón (DNI: 49904123-B), Gonzalo Blanca (DNI: 71821091-A), Pablo Galarón (DNI: 51199771-T), Mario Gómez (DNI: 77487217-X), 
-Itziar Carro (DNI: 12429492-Q), Hugo Alonso (DNI: 53764714-Y), Raul Palomo (DNI: 16642016-K)"
+title: "Análisis de Datos Electorales 🏛️️"
+subtitle: "Entrega Grupal Software Estadístico II 💻"
+author: "👥 Adolfo Alarcón, Gonzalo Blanca, Pablo Galarón, Mario Gómez, Itziar Carro, Hugo Alonso, Raul Palomo"
 format:
   revealjs:
     theme: [style.scss]
@@ -10,204 +10,7 @@ execute:
   echo: true
 ---
 
-## Instrucciones
-
--   Modificad dentro del documento .qmd vuestros datos personales (nombre y DNI) que se encuentran en el encabezado del archivo.
-
--   Aseguraos de que el archivo .qmd se renderice correctamente ANTES de continuar editando el documento y que el archivo .html correspondiente se genere en tu carpeta local en el ordenador.
-
-------------------------------------------------------------------------
-
-## Instrucciones
-
--   Los bloques de código (chunks) creados están vacíos o incompletos. Una vez que edites lo que consideres necesario, debes cambiar cada bloque a #\| eval: true (o eliminarlo directamente) para que se ejecuten.
-
--   Recuerda que puedes ejecutar los bloques de código uno por uno con el botón play o ejecutar todos los bloques hasta un bloque específico (con el botón situado a la izquierda del anterior).
-
-------------------------------------------------------------------------
-
-## Paquetes necesarios
-
-> Insertad aquí todos los paquetes vayáis necesitando
-
-```{r}
-rm(list = ls())
-library(tidyverse)
-```
-
-------------------------------------------------------------------------
-
-## Entrega grupal
-
-### Datos
-
-Un viejo amigo: la práctica se basará en los [**archivos de datos electorales**]{.hl-yellow} que se indican a continuación, recopilando datos sobre las elecciones al Congreso de los Diputados en España desde 2008 hasta la actualidad, así como encuestas, códigos de municipios y abreviaturas
-
-```{r}
-# NO TOQUES NADA
-election_data <- read_csv(file = "./data/datos_elecciones_brutos.csv")
-cod_mun <- read_csv(file = "./data/cod_mun.csv")
-surveys <- read_csv(file = "./data/historical_surveys.csv")
-abbrev <- read_csv(file = "./data/siglas.csv")
-```
-
-------------------------------------------------------------------------
-
-## Datos
-
--   `election_data`: archivo con las elecciones al congreso
--   `cod_mun`: archivo con los códigos y nombres de cada municipio
--   `abbrev`: siglas de cada partido
--   `surveys`: encuestas electorales desde 1982.
-
-------------------------------------------------------------------------
-
-## Datos
-
--   `surveys`: encuestas electorales desde 1982.
-    -   `type_survey`: tipo de encuesta (nacional, regional...)
-    -   `date_elec`: fecha de las futuras elecciones
-    -   `id_pollster`, `pollster`, `media`: id y nombre de la empresa encuestadora, así como medio que la encargó
-    -   `field_date_from`, `field_date_to`: fechas de inicio y fin del trabajo de la encuesta
-    -   `exit_poll`: ¿es una encuesta a pie de urna?
-    -   `size`: tamaño muestral de la encuesta
-    -   `turnout`: participación (estimación)
-
-------------------------------------------------------------------------
-
-## Objetivos
-
-El objetivo de la entrega es [**realizar un análisis de los datos electorales**]{.hl-green}, llevando a cabo la depuración, los resúmenes y los gráficos que consideres necesarios, tanto de los resultados como de la precisión de las encuestas electorales.
-
-En concreto, debes trabajar únicamente en el **período de tiempo que incluye las elecciones desde 2008 hasta las últimas elecciones de 2019**
-
-------------------------------------------------------------------------
-
-## Algunos comentarios
-
-Además de lo que consideres oportuno realizar, los siguientes elementos son obligatorios:
-
--   Cada grupo debe presentar [**antes del 17 de enero (23:59)**]{.hl-red} un análisis de los datos en formato .qmd y .html, en modo Quarto slides, que serán los que presentarán el día de la exposición.
-
--   Las Quarto slides deben subirse a Github (un miembro de cada grupo deberá proporcionar el enlace).
-
--   El número máximo de diapositivas será de 45. El tiempo máximo para cada grupo será de 22 minutos (+5-10 minutos para preguntas).
-
-------------------------------------------------------------------------
-
-## Algunos comentarios
-
--   Durante la presentación, deberéis explicar (de manera resumida) el análisis realizado, asegurándoos de que cada miembro del equipo hable durante un tiempo similar y que cualquier miembro pueda responder preguntas sobre cualquiera de los pasos realizados. La nota no será la misma para todos los integrantes.
-
--   Se valorará no solo el contenido, sino también la presentación (estética).
-
--   El objetivo es demostrar que se ha adquirido el máximo conocimiento del curso
-
-------------------------------------------------------------------------
-
-## Ítems obligatorios
-
-1.  Los datos deben ser convertidos a tidydata donde sea apropiado.
-
-2.  Debes incluir al menos un join entre tablas.
-
-3.  Recordatorio: información = varianza
-
-4.  Los paquetes `{glue}`, `{forcats}` y `{lubridate}` deben ser utilizados en algún punto
-
-5.  Los siguientes elementos deben usarse al menos una vez: mutate, summarise, group_by (o su equivalente), case_when
-
-6.  Deberéis definir al menos una función (con más de 5 líneas de código)
-
-------------------------------------------------------------------------
-
-## Ítems obligatorios
-
-7.  Contamos con muchos partidos que se presentan a las elecciones. Solo nos interesarán los siguientes partidos:
-
--   PARTIDO SOCIALISTA OBRERO ESPAÑOL (cuidado: tiene/tenía federaciones - sucursales - con otros nombres).
--   PARTIDO POPULAR
--   CIUDADANOS (cuidado: tiene/tenía federaciones - sucursales - con otros nombres).
--   PARTIDO NACIONALISTA VASCO
--   BLOQUE NACIONALISTA GALLEGO
--   CONVERGÈNCIA I UNIÓ
-
-------------------------------------------------------------------------
-
-## Ítems obligatorios
-
-7.  Contamos con muchos partidos que se presentan a las elecciones. Solo nos interesarán los siguientes partidos:
-
--   UNIDAS PODEMOS - IU (atención: aquí han tenido varios nombres - IU, Podem, Ezker Batua, ... - y no siempre se han presentado juntos, pero aquí los analizaremos como un conjunto).
--   ESQUERRA REPUBLICANA DE CATALUNYA
--   EH - BILDU (ahora son una coalición de partidos formada por Sortu, Eusko Alkartasuna, Aralar, Alternatiba).
--   MÁS PAÍS
--   VOX
-
-------------------------------------------------------------------------
-
-## Ítems obligatorios
-
-8.  Todo lo que no esté en alguno de los anteriores partidos debe ser correctamente reagrupado (y resumido) en `OTROS`
-
-9.  Las siglas deben ser usadas en las visualizaciones (ideas en <https://r-graph-gallery.com/>).
-
-10. Debes usar todos los archivos en algún momento.
-
-11. Debes descartar las encuestas que:
-
-```         
--   se refieran a elecciones anteriores a 2008
--   sean a pie de urna
--   tamaño muestral desconocido o inferior a 500.
--   tenga 1 día o menos de trabajo de campo.
-```
-
-------------------------------------------------------------------------
-
-## Ítems obligatorios
-
-12. Deberás responder obligatoriamente a las siguientes preguntas (más aquellas que consideres analizar para distinguirte del resto)
-
--   ¿Qué partido fue el ganador en los municipios con más de 100.000 habitantes (censo) en cada una de las elecciones?
-
--   ¿Qué partido fue el segundo cuando el primero fue el PSOE? ¿Y cuando el primero fue el PP?
-
--   ¿A quién beneficia la baja participación?
-
--   ¿Cómo analizar la relación entre censo y voto? ¿Es cierto que determinados partidos ganan en las zonas rurales?
-
-------------------------------------------------------------------------
-
-## Ítems obligatorios
-
--   ¿Cómo calibrar el error de las encuestas (recordemos que las encuestas son de intención de voto a nivel nacional)?
-
--   ¿Qué casas encuestadoras acertaron más y cuáles se desviaron más de los resultados?
-
-Debes incluir [**al menos 3 preguntas "originales" más**]{.hl-orange} que consideres interesantes de responder utilizando los datos.
-
-------------------------------------------------------------------------
-
-## Evaluación
-
-No se valorará más a quien haga más cosas.
-
-Más no siempre es mejor
-
-Se valorará la originalidad (en comparación con el resto de trabajos, ya sea en lo analizado, en el tema tratado, etc.), el cariño puesto en la entrega (el cariño en la vida es importante) y la relevancia de lo realizado.
-
-------------------------------------------------------------------------
-
-## Evaluación
-
-Una vez que tengas los elementos obligatorios de tu base de datos más o menos completos, piensa antes de escribir código: ¿qué podría ser interesante? ¿Qué necesito para obtener un resumen tanto numérico como visual?
-
-Recuerda que el objetivo real es demostrar un dominio de las herramientas vistas a lo largo del curso. Y eso no se mide solo por la cantidad de herramientas utilizadas, sino también por la calidad en su ejecución.
-
-Deberéis tenerlo todo subido a Github con el enlace generado de manera correcta.
-
-## EMPEZAMOS AHORA
+## Librerías Necesarias y carga de los datos
 
 ```{r}
 rm(list = ls())
@@ -220,6 +23,9 @@ library(forcats)
 library(glue)
 library(mapSpain)
 library(waffle)
+library(ggplot2)
+library(viridis)
+library(plotly)
 ```
 
 ```{r}
@@ -230,9 +36,13 @@ surveys <- read_csv(file = "./data/historical_surveys.csv")
 abbrev <- read_csv(file = "./data/siglas.csv")
 ```
 
-```{r}
-## Filtramos datos de 2008 a 2019
+------------------------------------------------------------------------
 
+## Filtrar años de 2008 a 2019
+
+> Debes trabajar únicamente en el **período de tiempo que incluye las elecciones desde 2008 hasta las últimas elecciones de 2019**.
+
+```{r}
 election_data <- 
   election_data |> 
   filter(between(anno, 2008, 2019))
@@ -241,11 +51,41 @@ election_data |>
   distinct(anno)
 ```
 
-## AHORA HAGO TIDY DATA
+------------------------------------------------------------------------
+
+## Queremos datos en TIDYDATA
+
+> Los datos deben ser convertidos a **tidydata** donde sea apropiado.
+
+::: incremental
+-   Cada variable en una única columna ❌
+-   Cada individuo en una fila diferente ✅
+-   Cada celda con un único valor ✅
+-   Cada dataset en un tibble ✅
+-   Si queremos cruzar múltiples tablas debemos tener una columna común ❌
+:::
+
+------------------------------------------------------------------------
+
+## Queremos datos en TIDYDATA
 
 ```{r}
-## Tidy data Election_Data
+election_data
+```
 
+------------------------------------------------------------------------
+
+## Queremos datos en TIDYDATA
+
+> Conjunto de datos **ELECCIONES**
+
+-   Con pivot_longer -\> cada **variable** estará en **una única columna**
+
+-   Eliminamos las variables que tomen **un único valor** porque **INFORMACIÓN = VARIANZA**
+
+-   Creamos Código de municipio con glue para luego **poder cruzar tablas**
+
+```{r}
 election_data_tidy <-
   election_data |> 
   pivot_longer(cols =  "BERDEAK-LOS VERDES":"COALICIÓN POR MELILLA", 
@@ -255,7 +95,51 @@ election_data_tidy <-
   select(-c(tipo_eleccion, vuelta, codigo_distrito_electoral)) |> 
   mutate(fecha = ymd(glue("{anno}{mes}01")), 
          cod_mun= glue("{codigo_ccaa}-{codigo_provincia}-{codigo_municipio}"))
+```
 
+```{r}
+election_data_tidy <- 
+  election_data_tidy |> left_join(cod_mun, by = "cod_mun")
+```
+
+------------------------------------------------------------------------
+
+## Queremos datos en TIDYDATA
+
+```{r}
+surveys
+```
+
+------------------------------------------------------------------------
+
+## Queremos datos en TIDYDATA
+
+> Conjunto de datos **ENCUESTAS**
+
+-   Con pivot_longer -\> cada **variable** estará en **una única columna**
+
+-   Eliminamos las variables que tomen **un único valor** porque **INFORMACIÓN = VARIANZA**
+
+```{r}
+surveys_tidy <- 
+  surveys |> 
+  pivot_longer(cols= -("type_survey":"turnout"),
+               names_to= "Partido",
+               values_to="Estimación",
+               values_drop_na = TRUE)
+```
+
+------------------------------------------------------------------------
+
+## Reestructuración de los Partidos Políticos
+
+::: callout-warning
+-   No confundir el PSA con el PSOE, no tienen nada que ver, tener en cuenta para la recodificación solo los partidos que tengán en la tabla abbrev las siglas de PSOE, hay que **unir con la tabla abrevv** y así con todos.
+
+-   Cuidado con los signos como **. , ; '.** Tenemos que quitarlos porque sino nos dificultan la recodificación.
+:::
+
+```{r}
 election_data_tidy <- 
   election_data_tidy |> 
   left_join(abbrev, by = c("Partido" = "denominacion"))
@@ -263,7 +147,11 @@ election_data_tidy <-
 election_data_tidy <- 
   election_data_tidy |> 
   mutate(siglas = str_replace_all(siglas, pattern = "[\\.:\\+\\']", replacement = ""))
+```
 
+------------------------------------------------------------------------
+
+```{r}
 election_data_tidy <- 
   election_data_tidy |>
   mutate("siglas" =
@@ -275,222 +163,332 @@ election_data_tidy <-
                      str_detect(siglas, "PODEMOS|EB-B|IU") ~ "PODEMOS",
                      str_detect(siglas, "ERC|ESQUERRA") ~ "ERC",
                      str_detect(siglas, "BILDU|EA|ARALAR") ~ "BILDU",
-                     str_detect(siglas, "MÁS PAÍS") ~ "MP",
+                     str_detect(siglas, "M PAÍS") ~ "MP",
                      str_detect(siglas, "VOX") ~ "VOX",
                      str_detect(siglas, "CIU") ~ "CIU",
                      TRUE ~ "OTROS"))
+```
 
-election_data_tidy <- 
-  election_data_tidy |> left_join(cod_mun, by = "cod_mun")
-
-
-## Tidy data surveys
-
+```{r}
 surveys_tidy <- 
-  surveys |> 
-  pivot_longer(cols= -("type_survey":"turnout"),
-               names_to= "Partido",
-               values_to="Estimación",
-               values_drop_na = TRUE) |> 
-  select(-type_survey) |> 
+  surveys_tidy |>
+  mutate("siglas" =
+           case_when(str_detect(Partido, "PSOE") ~ "PSOE",
+                     str_detect(Partido, "PP") ~ "PP",
+                     str_detect(Partido, "CS|C´S") ~ "CS",
+                     str_detect(Partido, "PNV") ~ "PNV",
+                     str_detect(Partido, "BNG") ~ "BNG",
+                     str_detect(Partido, "PODEMOS|EB-B|IU") ~ "PODEMOS",
+                     str_detect(Partido, "ERC|ESQUERRA") ~ "ERC",
+                     str_detect(Partido, "BILDU|EA|ARALAR") ~ "BILDU",
+                     str_detect(Partido, "M PAÍS") ~ "MP",
+                     str_detect(Partido, "VOX") ~ "VOX",
+                     str_detect(Partido, "CIU") ~ "CIU",
+                     TRUE ~ "OTROS"))
+  
+```
+
+------------------------------------------------------------------------
+
+## Filtrar en el dataset Encuestas
+
+> Debes descartar las encuestas que:
+
+::: incremental
+-   se refieran a elecciones anteriores a 2008
+-   sean a pie de urna
+-   tamaño muestral desconocido o inferior a 500.
+-   tenga 1 día o menos de trabajo de campo.
+:::
+
+```{r}
+surveys_tidy <- 
+  surveys_tidy |> 
   drop_na(size) |> 
   filter(exit_poll == FALSE & size >= 500 & year(date_elec) >= 2008 & as.Date(field_date_to) - as.Date(field_date_from) > 1)
 ```
 
-## EJERCICIOS OBLIGATORIOS
+------------------------------------------------------------------------
 
-## ej 1: ¿Qué partido fue el ganador en los municipios con más de 100.000 habitantes (censo) en cada una de las elecciones?
+## Ítems Obligatorios
+
+### Pregunta 1
+
+> **¿Qué partido fue el ganador en los municipios con más de 100.000 habitantes (censo) en cada una de las elecciones?**
 
 ```{r}
 ganadores_municipios <- 
-election_data_tidy |> 
-  filter(censo > 100000) |>
-  group_by(fecha, cod_mun) |> 
-  slice_max(votos, n=1, with_ties =  FALSE) |>
+  election_data_tidy |> 
+  filter(censo > 100000) |> 
+  slice_max(votos, n=1, by = c(fecha, cod_mun), with_ties =  FALSE) |>
   select(c(fecha, cod_mun, municipio, siglas, votos))
 
-ggplot(ganadores_municipios, aes(x = fecha, fill = siglas)) +
-  geom_bar(position = "stack") +
+ganadores_municipios
+```
+
+------------------------------------------------------------------------
+
+```{r}
+resumen <- 
+  ganadores_municipios |> 
+  summarise("municipios_ganados" = n(), .by = c(fecha, siglas))
+
+resumen
+```
+
+------------------------------------------------------------------------
+
+```{r}
+municipios_ganados <-
+  ggplot(resumen) +
+  geom_col(aes(x = fct_reorder(siglas, -municipios_ganados), y = municipios_ganados, fill = siglas)) +
+  scale_fill_manual(values = c("#ffbf41", "#808080","#2E8B57", "#5f457c", "#1e4b8f", "#e30613", "#008000")) +
+  facet_wrap(~fecha, scales = "free_y") +
   labs(
-    title = "Partidos ganadores en municipios (>100k habitantes) por fecha",
-    x = "Fecha de Elección",
+    title = "Nº municipios (>100k habitantes) ganados por partido por fecha",
+    x = "Partido",
     y = "Número de Municipios Ganados",
-    fill = "Partido"
-  ) +
+    fill = "Partido") +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) + theme(plot.title = element_text(family = "serif",
+    size = 19, face = "bold"), legend.text = element_text(size = 10),
+    legend.title = element_text(size = 13,
+        family = "serif"), panel.background = element_rect(fill = "aliceblue"),
+    plot.background = element_rect(fill = "antiquewhite")) + theme(legend.text = element_text(family = "serif"))
 ```
 
-## ej 2.¿Qué partido fue el segundo cuando el primero fue el PSOE? ¿Y cuando el primero fue el PP?
+------------------------------------------------------------------------
+
+-   **Gráfico** 📊
 
 ```{r}
+ggplotly(municipios_ganados)
+```
 
-Ejercicio12_1<-
-election_data_tidy |>
-  group_by(fecha, cod_mun) |> 
-  slice_max(votos, n=2) |>
-  filter(siglas[1]=="PSOE") |>
-  select(c(fecha, cod_mun, municipio, siglas, votos)) |> #El select ayuda a previsualizar durante la creación                                                           del código no es necesario.
-  filter(siglas!="PSOE") |>
-  ungroup() |>
-  group_by(siglas) |>
-  count() |>
-  ungroup()
+------------------------------------------------------------------------
 
-Ejercicio12_2 <-
-election_data_tidy |>
-  group_by(fecha, cod_mun) |> 
-  slice_max(votos, n=2) |>
-  filter(siglas[1]=="PP") |>
-  select(c(fecha, cod_mun, municipio, siglas, votos)) |> #El select ayuda a previsualizar durante la creación del código no es necesario.
-  filter(siglas!="PP") |>
-  ungroup() |>
-  group_by(siglas) |>
-  count() |>
-  ungroup()
+## Pregunta 2
 
-pal1 <- c("#fefe66", "#f8624a", "#9d57f0", "#4aacf8", "#4af87c", "#9d57f0", "#fefe66", "#f84aae")
+> **¿Qué partido fue el segundo cuando el primero fue el PSOE? ¿Y cuando el primero fue el PP?**
 
-library(waffle)
+```{r}
+analizar_segundos_lugares <- function(data, partido_ganador) {
+  data |>
+    group_by(fecha, cod_mun) |>
+    slice_max(votos, n = 2) |>
+    filter(siglas[1] == partido_ganador) |>
+    filter(siglas != partido_ganador) |>
+    ungroup() |>
+    group_by(siglas) |>
+    count() |> 
+    ungroup()
+}
+```
 
-ggplot(Ejercicio12_1) +
-  geom_waffle(aes(fill = siglas, values = n), make_proportional = TRUE)+
-    scale_fill_manual(values = pal1)+
+------------------------------------------------------------------------
+
+```{r}
+Ejercicio12_2a <- analizar_segundos_lugares(election_data_tidy, "PSOE") 
+
+Ejercicio12_2a
+```
+
+```{r}
+Ejercicio12_2b <- analizar_segundos_lugares(election_data_tidy, "PP")
+
+Ejercicio12_2b
+```
+
+------------------------------------------------------------------------
+
+```{r}
+pal1 <- c('#808080', '#2E8B57', '#5f457c', '#1e4b8f', '#008000')
+
+preg_2 <- 
+ggplot(Ejercicio12_2a) +
+  geom_waffle(aes(fill = siglas, values = n), make_proportional = TRUE, alpha = 0.7, n_rows = 5) +
+  scale_fill_manual(values = pal1) +
+  coord_equal() +
+  labs(title = "Proporción de partidos en segundo lugar cuando ganó el PSOE") +
+  theme_minimal() + 
+  theme(legend.position = "bottom", legend.direction = "horizontal") + theme(plot.title = element_text(family = "serif",
+    size = 19, face = "bold"), legend.text = element_text(family = "serif"),
+    legend.title = element_text(size = 13,
+        family = "serif"), panel.background = element_rect(fill = NA))
+```
+
+```{r}
+pal2 <- c('#808080','#5f457c', '#e30613', '#008000')
+
+preg_2_a <- 
+ggplot(Ejercicio12_2b) +
+  geom_waffle(aes(fill = siglas, values = n), make_proportional = TRUE, alpha = 0.7, n_rows = 5) +
+  scale_fill_manual(values = pal2) +
+  coord_equal() +
+  labs(title = "Proporción de partidos en segundo lugar cuando ganó el PP") +
+  theme_minimal() +
+  theme_minimal() + theme(legend.position = "bottom", legend.direction = "horizontal") + theme(plot.title = element_text(family = "serif",
+    size = 19, face = "bold"), legend.text = element_text(family = "serif"),
+    legend.title = element_text(size = 14,
+        family = "serif"), panel.background = element_rect(fill = NA))
+```
+
+------------------------------------------------------------------------
+
+**Waffle** 📊
+
+```{r}
+preg_2
+```
+
+------------------------------------------------------------------------
+
+**Waffle** 📊
+
+```{r}
+preg_2_a
+```
+
+------------------------------------------------------------------------
+
+## Pregunta 3
+
+> **¿A quién beneficia la baja participación?**
+
+```{r}
+election_data_tidy <-
+  election_data_tidy |> mutate("participacion_total"= participacion_1 + participacion_2)
+
+correlacion <- 
+  election_data_tidy |> 
+  group_by(siglas) |> 
+  summarise(correlacion = cor(participacion_total, votos))
+
+correlacion
+```
+
+------------------------------------------------------------------------
+
+```{r}
+partido_colores <- c(
+  'PSOE' = '#e30613',
+  'PP' = '#1e4b8f',
+  'VOX' = '#008000',
+  'PODEMOS' = '#5f457c',
+  'ERC' = '#ffcc00',
+  'PNV' = '#2E8B57',
+  'BNG' = '#4682B4',
+  'OTROS' = '#808080',
+  'CS' = '#EB6109',
+  'MP' = '#6ad9c4',
+  'BILDU' = '#83C441')
+
+preg_3 <- 
+  ggplot(correlacion) +
+  geom_bar(aes(x = fct_reorder(siglas, correlacion, .desc = TRUE), 
+               y = correlacion, fill = siglas), 
+           stat = "identity") +
+  scale_fill_manual(values = partido_colores, na.value = "grey") +
+  theme_minimal() +
   labs(
-    title = "Proporción de partidos en segundo lugar cuando ganó el PSOE") +
-  theme_minimal() + theme(legend.position = "bottom", legend.direction = "horizontal")
-
-
-
-pal2 <- c("#fefe66","#9d57f0","#f8624a","#4af87c")
-
-
-ggplot(Ejercicio12_2) +
-  geom_waffle(aes(fill = siglas, values = n), make_proportional = TRUE)+
-    scale_fill_manual(values = pal2)+
-  labs(
-    title = "Proporción de partidos en segundo lugar cuando ganó el PP") +
-  theme_minimal() +
-  theme_minimal() + theme(legend.position = "bottom", legend.direction = "horizontal")
-
+    title = "Correlación entre Participación Total y Votos por Partido",
+    x = "Partido",
+    y = "Correlación")  + theme(plot.title = element_text(family = "serif",
+    size = 18.5, face = "bold"), legend.text = element_text(size = 9.2,
+    family = "serif"), legend.title = element_text(size = 14,
+    family = "serif"), panel.background = element_rect(fill = "aliceblue"),
+    plot.background = element_rect(fill = "antiquewhite"))
 ```
 
-#ejer3:¿A quién beneficia la baja participación? #ADOLFO
+------------------------------------------------------------------------
+
+**Gráfico de Barras** 📊
 
 ```{r}
-tema_morado_para_geom_bar<-
-  theme(legend.position = 'bottom',
-        plot.title = element_text(face= 'bold', size= 40, hjust = 0.5, margin = margin(t = 5, b= 20), color = '#FEFAE0'),
-        plot.subtitle = element_text(face = 'italic',size = 15, hjust = 0.5, margin = margin(b = 10), color = '#FEFAE0'),
-        plot.background = element_rect(fill = '#533749'),
-        panel.background = element_rect(fill = '#FEFAE0'),
-        panel.grid.major = element_line(color = '#B9B59D'),
-        panel.grid.minor = element_blank(),
-        plot.margin = margin(t = 20, b = 10, l = 15, r= 15),
-        axis.text = element_text(face = 'bold', size = 15, color = '#FEFAE0'),  # Tamaño del texto de los ejes
-        axis.title = element_text(face = 'italic', size = 16, color = '#FEFAE0'),  # Tamaño del texto de los títulos de ejes
-        legend.text = element_text(size = 15, color = '#FEFAE0'),  # Tamaño del texto de la leyenda
-        legend.title = element_text(face = 'italic', size = 16, color = '#FEFAE0'))
-
-
-
-
-election_data_tidy<-election_data_tidy |> mutate("participacion_total"=participacion_1+participacion_2)
-
-correlacion<- election_data_tidy |> 
-  group_by(siglas) |> summarise(correlacion = cor(participacion_total, votos, use = "complete.obs"))
-
-
-ggplot(correlacion, aes(x =siglas, y = correlacion)) +
-  geom_bar(stat = "identity", fill = '#533749') +
-  theme_minimal() +tema_morado_para_geom_bar+
-  labs(title = "Correlación entre Participación Total y Votos por Partido",
-       x = "Partido",
-       y = "Correlación") +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
-library(ggplot2)
-library(viridis)
-
-#cuanta mas correlación haya, mejor le viene q haya muchos votos
-#al aumentar la participación, también aumentan los votos para ese partido.
-#los partidos con correlaciones bajas son aquellos que podrían beneficiarse más de una baja participación 
-
-
-ggplot(election_data_tidy, aes(x = participacion_total, y = votos, color = siglas)) +
-  geom_point() +
-  geom_smooth(method = "lm", se = FALSE) +
-  scale_color_viridis_d()+
-  scale_color_manual(values=c("PSOE"="red","PP"="blue","VOX"="green","UP"="purple","PNV"="#117a65","OTROS"="grey","MP"="#abebc6","ERC"="yellow","EH-BILDU"="#76EEC6"
-                              ,"CS"="#FF8C00","CIU"="#00688B","BNG"="#B0E2FF"))
-  theme_minimal() +
-  labs(title = "Relación entre Participación y Votos por Partido",
-       x = "Participación",
-       y = "Votos",
-       color = "Partido") 
+ggplotly(preg_3)
 ```
 
-#ejer4:¿Cómo analizar la relación entre censo y voto? ¿Es cierto que determinados partidos ganan en las zonas rurales?
+Cuanta **más correlación** haya, **mejor le viene q haya muchos votos al aumentar la participación**, también aumentan los votos para ese partido. Los partidos con correlaciones bajas son aquellos que podrían beneficiarse más de una baja participación.
 
-#HUGO
+------------------------------------------------------------------------
+
+## Pregunta 4
+
+> **¿Cómo analizar la relación entre censo y voto? ¿Es cierto que determinados partidos ganan en las zonas rurales?**
+
+-   Seleccionar las **columnas necesarias**
 
 ```{r}
-# Seleccionar las columnas necesarias
-datos <- election_data_tidy |> 
+datos <- 
+  election_data_tidy |> 
   select(anno, mes, cod_mun, siglas, votos, censo, participacion_1, participacion_2)
 
-# Agrupar por partido político y sumar los votos totales
-votos_totales_por_partido <- datos |> 
+datos
+```
+
+------------------------------------------------------------------------
+
+-   Agrupar por **partido político** y sumar los votos totales
+
+```{r}
+votos_totales_por_partido <- 
+  datos |> 
   group_by(siglas) |> 
   summarise(
-    votos_totales = sum(votos, na.rm = TRUE),  # Sumar votos totales por partido
-    censo_total = sum(censo, na.rm = TRUE)    # Sumar el censo asociado
+    votos_totales = sum(votos, na.rm = TRUE),  #Sumar votos totales por partido
+    censo_total = sum(censo, na.rm = TRUE)    #Sumar el censo asociado
   ) |> 
   ungroup()
 
-votos_totales_por_partido <- votos_totales_por_partido |> 
-  mutate(
-    relacion_votos_censo = votos_totales / censo_total  # Proporción votos/censo
-  )
+votos_totales_por_partido
+```
+
+------------------------------------------------------------------------
+
+```{r}
+votos_totales_por_partido <- 
+  votos_totales_por_partido |> 
+  mutate(relacion_votos_censo = votos_totales / censo_total)  #Proporción votos/censo
 
 votos_totales_por_partido
 
-
-#Ahora vamos a clasificar los municipios en urbano o rural
-
-
-datos <- datos |> mutate("tipo" = case_when(
-  censo < 10000 ~ "rural",
-  TRUE ~"urbano"
-))
-
-# Calcular votos totales y proporción por tipo de zona
-votos_por_zona <- datos |> 
-  group_by(siglas, tipo) |> 
-  summarise(
-    votos_totales = sum(votos, na.rm = TRUE),
-    censo_total = sum(censo, na.rm = TRUE),
-    relacion_votos_censo = votos_totales / censo_total
-  ) |> 
-  ungroup()
-#Ahora vamos a clasificar los municipios en urbano o rural
-
-datos <- datos |> mutate("tipo" = case_when(
-  censo < 10000 ~ "rural",
-  TRUE ~"urbano"
-))
-
-# Calcular votos totales y proporción por tipo de zona
-votos_por_zona <- datos |> 
-  group_by(siglas, tipo) |> 
-  summarise(
-    votos_totales = sum(votos, na.rm = TRUE),
-    censo_total = sum(censo, na.rm = TRUE),
-    relacion_votos_censo = votos_totales / censo_total
-  ) |> 
-  ungroup()
 ```
 
-#ejer5:¿Cómo calibrar el error de las encuestas (recordemos que las encuestas son de intención de voto a nivel nacional)? ##RAUL
+------------------------------------------------------------------------
+
+- Ahora vamos a clasificar los municipios en **urbano o rural**
+
+```{r}
+datos <- datos |> mutate("tipo" = case_when(
+  censo < 10000 ~ "rural",
+  TRUE ~"urbano"
+))
+
+datos
+```
+
+------------------------------------------------------------------------
+
+-   Calcular **votos totales y proporción por tipo de zona**
+
+```{r}
+votos_por_zona <- datos |> 
+  group_by(siglas, tipo) |> 
+  summarise(
+    votos_totales = sum(votos, na.rm = TRUE),
+    censo_total = sum(censo, na.rm = TRUE),
+    relacion_votos_censo = votos_totales / censo_total
+  ) |> 
+  ungroup()
+
+votos_por_zona
+```
+
+------------------------------------------------------------------------
+
+## Pregunta 5
+
+> **¿Cómo calibrar el error de las encuestas (recordemos que las encuestas son de intención de voto a nivel nacional)?**
 
 ```{r}
 #agregamos el total de votos para cada elección.
@@ -512,39 +510,151 @@ porcentaje_votos_partido <-
   porcentaje_votos_partido |>  
   mutate("porcentaje_voto" = votos_totales_partido / votos_elección * 100,
          "elec_year" = year(fecha))
+
+porcentaje_votos_partido
 ```
 
+------------------------------------------------------------------------
+
+-   Calculamos el **error absoluto** entre el porcentaje de voto que recibió cada partido y las estimaciones.
+
 ```{r}
-#calculamos el error absoluto entre el porcentaje de voto que recibió cada partido y las estimaciones.
 error <- 
   surveys_tidy |> mutate("elec_year" = year(date_elec)) |>
   inner_join(porcentaje_votos_partido, by = c("elec_year" = "elec_year",
                                             "Partido" = "siglas"))  |> 
-  mutate("error_abs" = abs(Estimación - porcentaje_voto))
+  mutate("error_abs" = abs(Estimación - porcentaje_voto)) |> 
+  relocate(error_abs, .before = field_date_from)
+
+error
 ```
 
+------------------------------------------------------------------------
+
+-   Calculamos el **error medio** de cada encuesta para cada elección.
+
 ```{r}
-#calculamos el error medio de cada encuesta para cada elección.
 errores_encuestas <- 
   error |> 
   summarise("empresa" = unique(pollster),
             "error" = mean(error_abs), .by = c(date_elec, id_pollster))
+
+errores_encuestas
 ```
 
-#ejer6:¿Qué casas encuestadoras acertaron más y cuáles se desviaron más de los resultados?
+------------------------------------------------------------------------
+
+## Pregunta 6
+
+> **¿Qué casas encuestadoras acertaron más y cuáles se desviaron más de los resultados?**
+
+-   Vemos cuales fueron las **3 empresas** que **acertarón más** para cada elección
 
 ```{r}
-#vemos cuales fueron las 5 empresas que acertarón más
-errores_encuestas |>  
-  slice_min(error, n = 5) 
-
-
-#vemos cuales fueron las 5 empresas que se desviarón más de los resultados
-errores_encuestas |> 
-  slice_max(error, n = 5)
+empresas_mas_aciertos <-
+  errores_encuestas |>
+  slice_min(error, n = 3, by = date_elec) 
 ```
 
-## mapa ganador por municipio en las elecciones de 2019
+-   Vemos cuales fueron las **3 empresas** que se **desviarón más** de los resultados para cada elección
+
+```{r}
+empresas_menos_aciertos <-
+  errores_encuestas |> 
+  slice_max(error, n = 3, by = date_elec)
+```
+
+------------------------------------------------------------------------
+
+-   **Gráfico** 📊 de las empresas con más aciertos
+
+```{r}
+grafico_menor_error <- 
+  ggplot(empresas_mas_aciertos) +
+  geom_col(aes(x = fct_reorder(empresa, -error), y = error, fill = empresa)) +
+  facet_wrap(~date_elec, scales = "free_x") +
+  labs(title = "Empresas con mayor acierto por elección",
+       subtitle = "(Menor error cometido)", 
+       x = "Empresa", y = "Error cometido") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 5)) + theme(plot.title = element_text(family = "serif",
+    size = 19.5, face = "bold"), legend.text = element_text(family = "serif"),
+    legend.title = element_text(family = "serif"),
+    panel.background = element_rect(fill = "aliceblue"),
+    plot.background = element_rect(fill = "antiquewhite"))
+```
+
+-   **Gráfico** 📊 de las empresas que cometen más errores
+
+```{r}
+grafico_mayor_error <-
+  ggplot(empresas_menos_aciertos) +
+  geom_col(aes(x = fct_reorder(empresa, -error), y = error, fill = empresa)) +
+  facet_wrap(~date_elec, scales = "free_x") +
+  labs(title = "Empresas con mayor error por elección",
+       x = "Empresa", y = "Error cometido") +
+  theme_minimal()+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 5)) + theme(plot.title = element_text(family = "serif",
+    size = 20, face = "bold"), legend.text = element_text(size = 9,
+    family = "serif"), legend.title = element_text(size = 15,
+    family = "serif"), panel.background = element_rect(fill = "aliceblue"),
+    plot.background = element_rect(fill = "antiquewhite"))
+```
+
+------------------------------------------------------------------------
+
+```{r}
+ggplotly(grafico_menor_error)
+```
+
+------------------------------------------------------------------------
+
+```{r}
+ggplotly(grafico_mayor_error)
+```
+
+------------------------------------------------------------------------
+
+-   Calculamos el **error medio** de las encuestas
+
+```{r}
+error_medio_encuestas <-
+  errores_encuestas |> 
+  summarise("empresa" = unique(empresa),
+            "error_medio" = mean(error), .by = id_pollster)
+
+error_medio_encuestas
+```
+
+------------------------------------------------------------------------
+
+-   **Gráfico** 📊 para errores totales
+
+```{r}
+errores_totales <- 
+  ggplot(error_medio_encuestas) +
+  geom_col(aes(x = fct_reorder(empresa, -error_medio), y = error_medio, fill = "steelblue")) +
+  labs(title = "Error medio de cada empresa",
+       x = "Empresa", y = "Error medio") +
+  theme(legend.position = "none") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 5)) + theme(plot.title = element_text(family = "serif",
+    size = 20, face = "bold"), panel.background = element_rect(fill = "aliceblue"),
+    plot.background = element_rect(fill = "antiquewhite"))
+```
+
+------------------------------------------------------------------------
+
+```{r}
+ggplotly(errores_totales)
+```
+
+------------------------------------------------------------------------
+
+## Mapa Municipios
+
+> **Mapa con los partidos ganadores en cada municipio en las elecciones del año 2019.**
+
+-   Creamos nuestro **RESUMEN**
 
 ```{r}
 datos_mapa <- 
@@ -556,11 +666,27 @@ datos_mapa <-
   summarise("votos_por_mun" = sum(votos), .by = c(siglas, cod_mun)) |> 
   slice_max(votos_por_mun, n = 1, by = cod_mun) 
 
+datos_mapa
+```
+
+------------------------------------------------------------------------
+
+-   Creamos la **geometría** del mapa con un Join
+
+```{r}
 mapa_muni <- 
   esp_get_munic() |> 
   left_join(datos_mapa, by = c("LAU_CODE" = "cod_mun"))
 
+mapa_muni
+```
 
+------------------------------------------------------------------------
+
+-   Por último, **graficamos** 📊
+
+```{r}
+mapa_municipio <- 
 ggplot(mapa_muni) + 
   geom_sf(aes(fill = siglas), color = NA) + 
   scale_fill_manual(
@@ -590,11 +716,21 @@ ggplot(mapa_muni) +
     plot.background = element_rect(fill = "antiquewhite")) + theme(legend.title = element_text(size = 16))
 ```
 
-## mapa ganador por provincia en las elecciones de 2019
+------------------------------------------------------------------------
 
 ```{r}
-## mapa provincia
+mapa_municipio
+```
 
+------------------------------------------------------------------------
+
+## Mapa Provincias
+
+> **Mapa ganador por provincia en las elecciones de 2019**
+
+-   **RESUMEN**
+
+```{r}
 datos_mapa_prov <- 
   election_data_tidy |> 
   filter(anno == 2019) |> 
@@ -602,11 +738,27 @@ datos_mapa_prov <-
   summarise(votos_totales = sum(votos, na.rm = TRUE)) |> 
   filter(siglas != "OTROS") |> 
   slice_max(votos_totales, n = 1)
-  
+
+datos_mapa_prov
+```
+
+------------------------------------------------------------------------
+
+-   **GEOMETRÍA**
+
+```{r}
 mapa_provi <- 
   esp_get_prov() |> 
   left_join(datos_mapa_prov, by = c("cpro" = "codigo_provincia"))
 
+mapa_provi
+```
+
+------------------------------------------------------------------------
+
+-   **GRAFICAMOS** 📊
+
+```{r}
 partido_colores <- c(
   'PSOE' = '#e30613',
   'PP' = '#1e4b8f',
@@ -615,9 +767,9 @@ partido_colores <- c(
   'ERC' = '#ffcc00',
   'PNV' = '#2E8B57',
   'BNG' = '#4682B4',
-  'OTROS' = '#808080'
-)
+  'OTROS' = '#808080')
 
+mapa_provincias <- 
 ggplot(mapa_provi) +
   geom_sf(aes(fill = siglas), color = "white") + 
   scale_fill_manual(values = partido_colores) +
@@ -630,249 +782,92 @@ ggplot(mapa_provi) +
     plot.background = element_rect(fill = "antiquewhite"))
 ```
 
-#Qué medios de comunicación estimaron que las elecciones del 2008 las ganaba el PP vs qué medios de comunicación estimarón que ganaba el PSOE.
+------------------------------------------------------------------------
 
 ```{r}
-# Filtrar los datos para el año 2008 y los partidos PP y PSOE
+mapa_provincias
+```
+
+------------------------------------------------------------------------
+
+## PSOE VS PP (medios de comunicación)
+
+> **Qué medios de comunicación estimaron que las elecciones del 2019 las ganaba el PP vs qué medios de comunicación estimarón que ganaba el PSOE.**
+
+-   Filtrar los datos para el año **2019** y los partidos **PP y PSOE**
+
+```{r}
 medios <- surveys_tidy |> 
-  filter(year(date_elec) == 2008 & Partido %in% c("PP", "PSOE")) |> 
+  filter(year(date_elec) == 2019 & Partido %in% c("PP", "PSOE")) |> 
   select(c(date_elec, media, Partido, Estimación))
 
-# Dividir los datos entre PP y PSOE
-pp_data <- medios |> filter(Partido == "PP")
-psoe_data <- medios |> filter(Partido == "PSOE")
+medios
+```
 
-# Unir los datos por 'media' y 'date_elec' para poder comparar las estimaciones
+------------------------------------------------------------------------
+
+-   Dividir los datos entre **PP y PSOE**
+
+```{r}
+pp_data <- medios |> filter(Partido == "PP")
+pp_data
+```
+
+```{r}
+psoe_data <- medios |> filter(Partido == "PSOE")
+psoe_data
+```
+
+------------------------------------------------------------------------
+
+-   Unir los datos por 'media' y 'date_elec' para poder **comparar las estimaciones**
+
+```{r}
 comparacion <- pp_data |> 
   inner_join(psoe_data, by = c("media", "date_elec"), 
              suffix = c("_PP", "_PSOE"))
 
-# Filtrar los medios donde PP tiene mayor estimación que PSOE
+comparacion
+```
+
+------------------------------------------------------------------------
+
+-   Filtrar los medios donde PP tiene **mayor estimación que PSOE**
+-   Filtrar los medios donde PSOE tiene **mayor estimación que PP**
+
+```{r}
 resultado_pp <-
   comparacion |> 
   filter(Estimación_PP > Estimación_PSOE)
 
-# Filtrar los medios donde PSOE tiene mayor estimación que PP
+resultado_pp
+```
+
+```{r}
 resultado_psoe <- 
   comparacion |> 
   filter(Estimación_PP < Estimación_PSOE)
 
-# Seleccionar los medios únicos que favorecen a PP
+resultado_psoe
+```
+
+------------------------------------------------------------------------
+
+-   Seleccionar los medios únicos que **favorecen a PP**
+-   Seleccionar los medios únicos que **favorecen a PSOE**
+
+```{r}
 media_con_mas_pp <- 
   resultado_pp |> 
   select(media) |> distinct()
 
-# Seleccionar los medios únicos que favorecen a PSOE
 media_con_mas_psoe <- 
   resultado_psoe |> 
   select(media) |> distinct()
+```
 
-# Mostrar los resultados
+```{r}
 media_con_mas_pp
 media_con_mas_psoe
-
-```
-
-
-```{r}
-# Filtrar los datos para el año 2011 y los partidos PP y PSOE
-medios_2011 <- surveys_tidy |> 
-  filter(year(date_elec) == 2011 & Partido %in% c("PP", "PSOE")) |> 
-  select(c(date_elec, media, Partido, Estimación))
-
-# Dividir los datos entre PP y PSOE
-pp_data_2011 <- medios_2011 |> filter(Partido == "PP")
-psoe_data_2011 <- medios_2011 |> filter(Partido == "PSOE")
-
-# Unir los datos por 'media' y 'date_elec' para poder comparar las estimaciones
-comparacion_2011 <- pp_data_2011 |> 
-  inner_join(psoe_data_2011, by = c("media", "date_elec"), 
-             suffix = c("_PP", "_PSOE"))
-
-# Filtrar los medios donde PP tiene mayor estimación que PSOE
-resultado_pp_2011 <-
-  comparacion_2011 |> 
-  filter(Estimación_PP > Estimación_PSOE)
-
-# Filtrar los medios donde PSOE tiene mayor estimación que PP
-resultado_psoe_2011 <- 
-  comparacion_2011 |> 
-  filter(Estimación_PP < Estimación_PSOE)
-
-# Seleccionar los medios únicos que favorecen a PP
-media_con_mas_pp_2011 <- 
-  resultado_pp_2011 |> 
-  select(media) |> distinct()
-
-# Seleccionar los medios únicos que favorecen a PSOE
-media_con_mas_psoe_2011 <- 
-  resultado_psoe_2011 |> 
-  select(media) |> distinct()
-
-# Mostrar los resultados
-media_con_mas_pp_2011
-media_con_mas_psoe_2011
-
-
-```
-
-```{r}
-# Filtrar los datos para el año 2015 y los partidos PP y PSOE
-medios_2015 <- surveys_tidy |> 
-  filter(year(date_elec) == 2015 & Partido %in% c("PP", "PSOE")) |> 
-  select(c(date_elec, media, Partido, Estimación))
-
-# Dividir los datos entre PP y PSOE
-pp_data_2015 <- medios_2015 |> filter(Partido == "PP")
-psoe_data_2015 <- medios_2015 |> filter(Partido == "PSOE")
-
-# Unir los datos por 'media' y 'date_elec' para poder comparar las estimaciones
-comparacion_2015 <- pp_data_2015 |> 
-  inner_join(psoe_data_2015, by = c("media", "date_elec"), 
-             suffix = c("_PP", "_PSOE"))
-
-# Filtrar los medios donde PP tiene mayor estimación que PSOE
-resultado_pp_2015 <-
-  comparacion_2015 |> 
-  filter(Estimación_PP > Estimación_PSOE)
-
-# Filtrar los medios donde PSOE tiene mayor estimación que PP
-resultado_psoe_2015 <- 
-  comparacion_2015 |> 
-  filter(Estimación_PP < Estimación_PSOE)
-
-# Seleccionar los medios únicos que favorecen a PP
-media_con_mas_pp_2015 <- 
-  resultado_pp_2015 |> 
-  select(media) |> distinct()
-
-# Seleccionar los medios únicos que favorecen a PSOE
-media_con_mas_psoe_2015 <- 
-  resultado_psoe_2015 |> 
-  select(media) |> distinct()
-
-# Mostrar los resultados
-media_con_mas_pp_2015
-media_con_mas_psoe_2015
-
-```
-
-
-```{r}
-# Filtrar los datos para el año 2016 y los partidos PP y PSOE
-medios_2016 <- surveys_tidy |> 
-  filter(year(date_elec) == 2016 & Partido %in% c("PP", "PSOE")) |> 
-  select(c(date_elec, media, Partido, Estimación))
-
-# Dividir los datos entre PP y PSOE
-pp_data_2016 <- medios_2016 |> filter(Partido == "PP")
-psoe_data_2016 <- medios_2016 |> filter(Partido == "PSOE")
-
-# Unir los datos por 'media' y 'date_elec' para poder comparar las estimaciones
-comparacion_2016 <- pp_data_2016 |> 
-  inner_join(psoe_data_2016, by = c("media", "date_elec"), 
-             suffix = c("_PP", "_PSOE"))
-
-# Filtrar los medios donde PP tiene mayor estimación que PSOE
-resultado_pp_2016 <-
-  comparacion_2016 |> 
-  filter(Estimación_PP > Estimación_PSOE)
-
-# Filtrar los medios donde PSOE tiene mayor estimación que PP
-resultado_psoe_2016 <- 
-  comparacion_2016 |> 
-  filter(Estimación_PP < Estimación_PSOE)
-
-# Seleccionar los medios únicos que favorecen a PP
-media_con_mas_pp_2016 <- 
-  resultado_pp_2016 |> 
-  select(media) |> distinct()
-
-# Seleccionar los medios únicos que favorecen a PSOE
-media_con_mas_psoe_2016 <- 
-  resultado_psoe_2016 |> 
-  select(media) |> distinct()
-
-# Mostrar los resultados
-media_con_mas_pp_2016 
-media_con_mas_psoe_2016 #No hubo ninguno que dijese que el psoe ganaba
-
-```
-
-```{r}
-# Filtrar los datos para el año 2019 y los partidos PP y PSOE
-medios_2019 <- surveys_tidy |> 
-  filter(year(date_elec) == 2019 & Partido %in% c("PP", "PSOE")) |> 
-  select(c(date_elec, media, Partido, Estimación))
-
-# Dividir los datos entre PP y PSOE
-pp_data_2019 <- medios_2019 |> filter(Partido == "PP")
-psoe_data_2019 <- medios_2019 |> filter(Partido == "PSOE")
-
-# Unir los datos por 'media' y 'date_elec' para poder comparar las estimaciones
-comparacion_2019 <- pp_data_2019 |> 
-  inner_join(psoe_data_2019, by = c("media", "date_elec"), 
-             suffix = c("_PP", "_PSOE"))
-
-# Filtrar los medios donde PP tiene mayor estimación que PSOE
-resultado_pp_2019 <-
-  comparacion_2019 |> 
-  filter(Estimación_PP > Estimación_PSOE)
-
-# Filtrar los medios donde PSOE tiene mayor estimación que PP
-resultado_psoe_2019 <- 
-  comparacion_2019 |> 
-  filter(Estimación_PP < Estimación_PSOE)
-
-# Seleccionar los medios únicos que favorecen a PP
-media_con_mas_pp_2019 <- 
-  resultado_pp_2019 |> 
-  select(media) |> distinct()
-
-# Seleccionar los medios únicos que favorecen a PSOE
-media_con_mas_psoe_2019 <- 
-  resultado_psoe_2019 |> 
-  select(media) |> distinct()
-
-# Mostrar los resultados
-media_con_mas_pp_2019
-media_con_mas_psoe_2019
-
-```
-```{r}
-library(ggplot2)
-
-# Combinar los resultados de todos los años en un solo dataframe
-medios_favoritos <- bind_rows(
-  media_con_mas_pp |> mutate(Partido = "PP"),
-  media_con_mas_psoe |> mutate(Partido = "PSOE"),
-  media_con_mas_pp_2011 |> mutate(Partido = "PP"),
-  media_con_mas_psoe_2011 |> mutate(Partido = "PSOE"),
-  media_con_mas_pp_2015 |> mutate(Partido = "PP"),
-  media_con_mas_psoe_2015 |> mutate(Partido = "PSOE"),
-  media_con_mas_pp_2016 |> mutate(Partido = "PP"),
-  media_con_mas_psoe_2016 |> mutate(Partido = "PSOE"),
-  media_con_mas_pp_2019 |> mutate(Partido = "PP"),
-  media_con_mas_psoe_2019 |> mutate(Partido = "PSOE")
-)
-
-# Resumir el conteo de veces que cada partido fue favorecido
-resumen_favoritos <- medios_favoritos |> 
-  group_by(Partido) |> 
-  summarise(Conteo = n()) |> 
-  arrange(desc(Conteo))
-
-# Crear el gráfico de barras
-ggplot(resumen_favoritos, aes(x = Partido, y = Conteo, fill = Partido)) +
-  geom_bar(stat = "identity", width = 0.6) +
-  labs(
-    title = "Preferencia de los Medios por Partido (2008-2019)",
-    x = "Partido Político",
-    y = "Número de veces favorecido",
-    fill = "Partido"
-  ) +
-  theme_minimal() +
-  scale_fill_manual(values = c("PP" = "blue", "PSOE" = "red"))
-
 ```
 
